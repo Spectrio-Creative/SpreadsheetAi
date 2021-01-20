@@ -7,11 +7,11 @@ export default {
     input: 'src/main.js',
     output: [
       {
-        file: 'build/spreadsheet_ai.jsx',
+        file: 'build/SpreadsheetAi.jsx',
         format: 'esm',
       },
       {
-        file: 'build/spreadsheet_ai.min.jsx',
+        file: 'build/SpreadsheetAi.min.jsx',
         format: 'esm',
         name: 'version',
         plugins: [terser()]
