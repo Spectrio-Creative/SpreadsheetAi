@@ -65,4 +65,23 @@ function arrIncludes(arr, str){
     return false;
 }
 
-export {clean, getTextContent, priceCheck, reduceText, reduceGroup, arrIncludes};
+function loopBackwards(arr, callback){
+    for(let i = arr.length - 1; i >= 0; i--){
+        if(callback) {
+           let command = callback(arr[i]);
+           if(command === 'stop') return;
+        }
+    }
+}
+
+function replaceMoustaches(item, key, value) {
+    moustache = new RegExp(
+      "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
+      "i"
+    );
+    if (moustache.test(item.contents)) {
+      item.contents = item.contents.replace(moustache, value);
+    }
+  }
+
+export {clean, getTextContent, priceCheck, reduceText, reduceGroup, arrIncludes, loopBackwards, replaceMoustaches};
