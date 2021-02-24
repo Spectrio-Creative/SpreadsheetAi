@@ -1,5 +1,5 @@
-import {priceCheck, reduceGroup, reduceText, arrIncludes} from './tools';
-import {isOverset, isOversetSingle} from './oversetCheck';
+import {priceCheck, reduceGroup, reduceText, arrIncludes} from './tools/tools';
+import {isOverset, isOversetSingle} from './tools/oversetCheck';
 
 const masterLayer = app.activeDocument.layers[0],
 applicationPath = app.activeDocument.path;

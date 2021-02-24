@@ -1,7 +1,16 @@
+// Illustrator reserves the keyword 'version', but we need it for our own version;
+let aiVersion = version;
+import { setUpArrayMethods } from "./arrayMethods";
+import { extendExtendscript } from "./jsxMethods";
 import convertObj from "./convertObj";
 import { createLayer } from "./createLayer";
+import { setLayerSheet } from "./tools/globals";
+import { version as scriptVersion } from "../package.json";
 
-const myFile = File.openDialog("Please select CSV Spreadsheet.");
+alert(`SpreadsheetAi (v${scriptVersion})`);
+const myFile = File.openDialog(`Please select CSV Spreadsheet.`);
+setUpArrayMethods();
+extendExtendscript();
 
 if (myFile != null) {
   // open file
@@ -24,10 +33,16 @@ if (myFile != null) {
     fileObj = convertObj(fileObj);
 
     for (var i = 0; i < fileObj.length; i++) {
-    //   for (key in fileObj[i]) {
-    //     alert(key + ": " + fileObj[i][key]);
-    //   }
-      createLayer(fileObj[i], i);
+      setLayerSheet(fileObj[i]);
+      createLayer(i);
+    }
+
+    createLayer.circleBack = createLayer.circleBack
+      ? createLayer.circleBack
+      : [];
+    for (var i = 0; i < createLayer.circleBack.length; i++) {
+      setLayerSheet(createLayer.circleBack[i]);
+      createLayer(i);
     }
 
     myFile.close();

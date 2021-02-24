@@ -1,48 +1,85 @@
-import {
-  priceCheck,
-  reduceGroup,
-  reduceText,
-  arrIncludes,
-  loopBackwards,
-} from "./tools";
-import { findTemplate } from "./templateTools";
-import { isOverset, isOversetSingle } from "./oversetCheck";
-import { insertTemplateValues } from "./insertTemplateValues";
+import { recursiveLayerLoop } from "./tools/tools";
+import { findTemplate } from "./tools/templateTools";
+import { fillFromTemplate } from "./insertTemplateValues";
+import { active_document } from "./document";
+import { layer_sheet } from "./tools/globals";
 
-const masterLayer = app.activeDocument.layers[0],
-  applicationPath = app.activeDocument.path;
-
-function createLayer(obj, num) {
-  const active_document = app.activeDocument;
-  // Having layers selected before copying layer can cause problems
-  app.executeMenuCommand("deselectall");
-
+function createLayer(num) {
   const project_layers = active_document.layers;
-  const template_title = obj["template"]; // Add logic for variable template ref
+  const template_title = layer_sheet["template"]; // Add logic for variable template ref
   const template = findTemplate(project_layers, template_title);
+
+  if (template === undefined) {
+    alert(`Template "${template_title}" not found in document.`);
+    return;
+  }
 
   // Make the template active so we can copy it
   active_document.activeLayer = template;
   // Copy the layer
 
+  // Script is finished running when template's parent
+  // has one more child.
+  const original_length = template.parent.layers.length;
   try {
     app.doScript("Duplicate Layer", "SpreadsheetAi");
+    // alert(original_length + ' != ' + template.parent.layers.length);
   } catch (e) {
-      throw('You must install the SpreadsheetAi actions file before running this script.');
+    throw "You must install the SpreadsheetAi actions file before running this script.";
   }
 
-  const new_layer = active_document.activeLayer;
-  // Move layer to the top / out of the template directory
-  new_layer.move(app.activeDocument, ElementPlacement.PLACEATBEGINNING);
+  let callback_timeout = 0;
+  function afterDuplication() {
+    if (template.parent.layers.length === original_length) {
+      callback_timeout++;
 
-  for(key in obj){
-      if(key == 'template') continue;
-      let value = obj[key];
+      if (callback_timeout > 10) {
+        !createLayer.circleBack
+          ? (createLayer.circleBack = [layer_sheet])
+          : createLayer.circleBack.includes(layer_sheet)
+          ? alert(
+              `Failed to create layer ${
+                layer_sheet["layer name"]
+                  ? layer_sheet["layer name"]
+                  : "layer " + (num + 1) + " [" + template.name + "]"
+              }
+            Have you installed the SpreadsheetAi actions?
+            You might also try running the script again with a different template selected (strange, I know).
+            `
+            )
+          : createLayer.circleBack.push(layer_sheet);
+        return;
+      }
 
-      insertTemplateValues(new_layer, key, value);
+      $.setTimeout(() => {
+        afterDuplication();
+      }, 300);
+
+      return;
+    }
+
+    const parentLayers = template.parent.layers;
+    let layer_index;
+    // Find newly created layer
+    for (let i = 0; i < parentLayers.length; i++) {
+      if (parentLayers[i] === template) layer_index = i - 1;
+    }
+    const new_layer = parentLayers[layer_index];
+
+    // Move layer to the top / out of the template directory
+    new_layer.move(app.activeDocument, ElementPlacement.PLACEATBEGINNING);
+
+    new_layer.name = layer_sheet["layer name"]
+      ? layer_sheet["layer name"]
+      : "layer " + (num + 1) + " [" + template.name + "]";
+
+    recursiveLayerLoop(new_layer, (layer) => {
+      fillFromTemplate(layer);
+    });
   }
 
-
+  afterDuplication();
+  // redraw();
 }
 
 export { createLayer };
