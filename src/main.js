@@ -1,10 +1,10 @@
 // Illustrator reserves the keyword 'version', but we need it for our own version;
 let aiVersion = version;
-import { setUpArrayMethods } from "./arrayMethods";
-import { extendExtendscript } from "./jsxMethods";
-import convertObj from "./convertObj";
-import { createLayer } from "./createLayer";
-import { setLayerSheet } from "./tools/globals";
+import { setUpArrayMethods } from "./tools/extensions/arrayMethods";
+import { extendExtendscript } from "./tools/extensions/jsxMethods";
+import convertObj from "./tools/convertObj";
+import { createLayer } from "./base/createLayer";
+import { setLayerSheet } from "./globals/globals";
 import { version as scriptVersion } from "../package.json";
 import {
   loadSpreadsheetActions,

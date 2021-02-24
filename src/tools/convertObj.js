@@ -1,4 +1,4 @@
-import {clean} from './tools/tools';
+import {clean} from './tools';
 
 function convertObj(obj) {
     var keys = obj[0].split(','),

@@ -1,5 +1,3 @@
-import { active_document, application_path } from "../document";
-
 class AiPageItem {
   constructor(item) {
     this.obj = item;

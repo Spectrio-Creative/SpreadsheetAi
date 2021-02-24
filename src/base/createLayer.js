@@ -1,8 +1,8 @@
-import { recursiveLayerLoop } from "./tools/tools";
-import { findTemplate } from "./tools/templateTools";
+import { recursiveLayerLoop } from "../tools/tools";
+import { findTemplate } from "../tools/templateTools";
 import { fillFromTemplate } from "./insertTemplateValues";
-import { active_document } from "./document";
-import { layer_sheet } from "./tools/globals";
+import { active_document } from "../globals/document";
+import { layer_sheet } from "../globals/globals";
 
 function createLayer(num) {
   const project_layers = active_document.layers;

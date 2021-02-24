@@ -1,4 +1,4 @@
-import { application_path } from "../document";
+import { application_path } from "../globals/document";
 import sheetString from "../../actions/SpreadsheetAi.aia";
 
 function loadSpreadsheetActions() {

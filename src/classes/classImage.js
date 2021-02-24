@@ -1,4 +1,4 @@
-import { active_document, application_path } from "../document";
+import { active_document, application_path } from "../globals/document";
 
 class AiImage {
   constructor(item, url, options) {

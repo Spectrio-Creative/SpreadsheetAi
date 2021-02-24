@@ -1,12 +1,10 @@
-import { AiImage } from "./classes/classImage";
-import { AiTextBox } from "./classes/classTextBox";
-import { AiPageItem } from "./classes/classPageItem";
-import { AiGroupItem } from "./classes/classGroup";
-import { importImage } from "./importImage";
-import { matchSize, matchLocation } from "./tools/layerTools";
-import { is_image } from "./tools/regExTests";
-import { loopBackwards, replaceMoustaches, stringToObj } from "./tools/tools";
-import { getLayerSheet, layer_sheet } from "./tools/globals";
+import { AiImage } from "../classes/classImage";
+import { AiTextBox } from "../classes/classTextBox";
+import { AiPageItem } from "../classes/classPageItem";
+import { AiGroupItem } from "../classes/classGroup";
+import { is_image } from "../tools/regExTests";
+import { stringToObj } from "../tools/tools";
+import { layer_sheet } from "../globals/globals";
 
 function fillLayer(item) {
   // If the item name is if found in the spreadsheet

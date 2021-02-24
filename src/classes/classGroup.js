@@ -1,5 +1,3 @@
-import { active_document, application_path } from "../document";
-
 class AiGroupItem {
   constructor(item) {
     this.obj = item;
