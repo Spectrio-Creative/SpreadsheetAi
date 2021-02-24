@@ -1,6 +1,7 @@
 import json from '@rollup/plugin-json';
 import {terser} from 'rollup-plugin-terser';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
+import { string } from "rollup-plugin-string";
 
 // rollup.config.js
 export default {
@@ -17,5 +18,5 @@ export default {
         plugins: [terser()]
       }
     ],
-    plugins: [json(), getBabelOutputPlugin({ presets: ['extendscript'] })]
+    plugins: [json(), getBabelOutputPlugin({ presets: ['extendscript'] }), string({include: "actions/*"})]
   };

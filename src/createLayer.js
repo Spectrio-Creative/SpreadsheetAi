@@ -21,12 +21,7 @@ function createLayer(num) {
   // Script is finished running when template's parent
   // has one more child.
   const original_length = template.parent.layers.length;
-  try {
-    app.doScript("Duplicate Layer", "SpreadsheetAi");
-    // alert(original_length + ' != ' + template.parent.layers.length);
-  } catch (e) {
-    throw "You must install the SpreadsheetAi actions file before running this script.";
-  }
+  app.doScript("Duplicate Layer", "SpreadsheetAi");
 
   let callback_timeout = 0;
   function afterDuplication() {
@@ -43,8 +38,7 @@ function createLayer(num) {
                   ? layer_sheet["layer name"]
                   : "layer " + (num + 1) + " [" + template.name + "]"
               }
-            Have you installed the SpreadsheetAi actions?
-            You might also try running the script again with a different template selected (strange, I know).
+            We’re not sure what went wrong, but you might also try running the script again with a different template selected (strange, I know).
             `
             )
           : createLayer.circleBack.push(layer_sheet);
