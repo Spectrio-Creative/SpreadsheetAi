@@ -14,8 +14,8 @@ import { AiColorShape } from "../classes/classColorShape";
 
 function fillLayer(item) {
   const options = layer_options.test(item.name)
-  ? stringToObj(item.name.match(layer_options)[1])
-  : {};
+    ? stringToObj(item.name.match(layer_options)[1])
+    : {};
   // If the item name is if found in the spreadsheet
   for (key in layer_sheet) {
     const key_match = key_test(key);
@@ -35,7 +35,6 @@ function fillLayer(item) {
         return new_image;
       } else if (is_color.test(value)) {
         const new_color = new AiColorShape(item, value, options);
-        // if (!new_image.hasImage) return;
         return new_color;
       } else {
         alert(item.typename);
@@ -52,7 +51,8 @@ function fillLayer(item) {
     // If data has changed, then we resize.
     if (moustaches) new_textbox.resizeBox();
     return new_textbox;
-  } else if(item.typename === "PathItem" && options.color) {
+    // If PathItem, check for colors;
+  } else if (item.typename === "PathItem" && options.color) {
     const new_color = new AiColorShape(item, undefined, options);
     return new_color;
   }
