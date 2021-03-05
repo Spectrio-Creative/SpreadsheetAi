@@ -26,6 +26,7 @@ function fillLayer(item) {
         if (is_color.test(value)) continue;
         const new_textbox = new AiTextBox(item, value, options);
         new_textbox.replaceMoustaches(layer_sheet);
+        new_textbox.italicize();
         new_textbox.resizeBox();
         return new_textbox;
       } else if (is_image.test(value)) {
@@ -47,6 +48,7 @@ function fillLayer(item) {
   if (item.typename === "TextFrame") {
     const new_textbox = new AiTextBox(item, undefined, options);
     let moustaches = new_textbox.replaceMoustaches(layer_sheet);
+    new_textbox.italicize();
     // If data has changed, then we resize.
     if (moustaches) new_textbox.resizeBox();
     return new_textbox;

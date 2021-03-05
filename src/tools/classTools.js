@@ -53,4 +53,8 @@ const getGroupAlignment = (group) => {
   return { x: groupAlignment, y: "center" };
 };
 
-export { isStringLocation, parseLocation, getGroupAlignment };
+const getFontFamily = (textFont) => {
+  return app.textFonts.filter(tf => tf.family === textFont.family);
+}
+
+export { isStringLocation, parseLocation, getGroupAlignment, getFontFamily };

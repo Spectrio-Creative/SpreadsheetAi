@@ -7,39 +7,12 @@ import { layer_options } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
 import { AiPageItem } from "./classPageItem";
 
-class AiGroupItem {
+class AiGroupItem extends AiPageItem {
   constructor(item, options) {
-    this.obj = item;
-    this.options = options;
-    this.original = { height: 0, width: 0, ratio: 1 };
-    this.getDimensions();
-    this.getPosition();
+    super(item, options);
     this.background = undefined;
     this.findBackground();
     if (this.background) this.setBackgroundPadding();
-  }
-
-  height() {
-    return this.obj.textPath.height;
-  }
-
-  width() {
-    return this.obj.textPath.width;
-  }
-
-  offset(axis) {
-    let offset = {
-      y: 0, //(this.obj.textPath.height - this.original.height),
-      x: 0, //(this.obj.textPath.width - this.original.width),
-    };
-
-    if (axis) return offset[axis];
-    return offset;
-  }
-
-  move(x, y) {
-    this.obj.top -= y;
-    this.obj.left -= x;
   }
 
   setPosition(x, y) {
@@ -87,19 +60,7 @@ class AiGroupItem {
       return;
     }
 
-    this.obj.top = y;
-    this.obj.left = x;
-  }
-
-  getDimensions() {
-    this.original.height = this.obj.height;
-    this.original.width = this.obj.width;
-    this.original.ratio = this.obj.width / this.obj.height;
-  }
-
-  getPosition() {
-    this.original.top = this.obj.top;
-    this.original.left = this.obj.left;
+    super.setPosition(x, y);
   }
 
   findBackground() {

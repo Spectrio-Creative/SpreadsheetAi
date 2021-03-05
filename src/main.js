@@ -10,6 +10,7 @@ import {
   loadSpreadsheetActions,
   removeSpreadsheetAction,
 } from "./tools/actionTools";
+import { forceInclusions } from "./tools/forceInclusions";
 
 const main = () => {
   alert(`SpreadsheetAi (v${scriptVersion})`);
@@ -18,6 +19,7 @@ const main = () => {
   const myFile = File.openDialog(`Please select CSV Spreadsheet.`);
   setUpArrayMethods();
   extendExtendscript();
+  forceInclusions();
 
   if (myFile != null) {
     // open file

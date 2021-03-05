@@ -1,14 +1,10 @@
 import { getLayerSheetCC } from "../globals/globals";
-import { isStringLocation, parseLocation } from "../tools/classTools";
 import { hexToRgb } from "../tools/tools";
+import { AiPageItem } from "./classPageItem";
 
-class AiColorShape {
+class AiColorShape extends AiPageItem {
   constructor(item, value, options) {
-    this.obj = item;
-    this.options = options;
-    this.original = {};
-    this.getDimensions();
-    this.getPosition();
+    super(item, options);
 
     let hex = value;
     if (options.color) {
@@ -18,30 +14,13 @@ class AiColorShape {
     if (hex) this.setFillColor(hex);
   }
 
-  height() {
-    return this.obj.textPath.height;
-  }
-
-  width() {
-    return this.obj.textPath.width;
-  }
-
-  move(x, y) {
-    this.obj.top -= y;
-    this.obj.left -= x;
-  }
-
-  offset(axis) {
-    let offset = {
-      y: this.obj.height - this.original.height,
-      x: this.obj.width - this.original.width,
-    };
-
-    if (axis) return offset[axis];
-    return offset;
-  }
   setFillColor(hex) {
     let rgb = hexToRgb(hex);
+    if (rgb === null) {
+      alert(`Error thrown while setting path color.
+      '${hex}' must be formatted as a hex color to be used as a color value.`);
+      return;
+    }
     let fill = new RGBColor();
 
     fill.red = rgb.r;
@@ -49,17 +28,6 @@ class AiColorShape {
     fill.blue = rgb.b;
 
     this.obj.fillColor = fill;
-  }
-
-  getDimensions() {
-    this.original.height = this.obj.height;
-    this.original.width = this.obj.width;
-    this.original.ratio = this.obj.width / this.obj.height;
-  }
-
-  getPosition() {
-    this.original.top = this.obj.top;
-    this.original.left = this.obj.left;
   }
 }
 

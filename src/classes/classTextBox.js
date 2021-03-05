@@ -1,4 +1,5 @@
 import { getLayerSheetCC, layer_sheet } from "../globals/globals";
+import { getFontFamily } from "../tools/classTools";
 import { deMoustache } from "../tools/textTools";
 import { hexToRgb, stringToObj } from "../tools/tools";
 
@@ -19,9 +20,11 @@ class AiTextBox {
     this.expandOptions();
     this.original = { height: 0, width: 0 };
     this.getDimensions();
-    if(options.color) {
+    this.getFont();
+    this.fonts = { regular: this.original.textFont };
+    if (options.color) {
       const layer_sheet_cc = getLayerSheetCC();
-      this.setColor(layer_sheet_cc[options.color])
+      this.setColor(layer_sheet_cc[options.color]);
     }
   }
 
@@ -59,6 +62,61 @@ class AiTextBox {
   getDimensions() {
     this.original.height = this.obj.textPath.height;
     this.original.width = this.obj.textPath.width;
+  }
+
+  getFont() {
+    const textFont = this.obj.textRange.characterAttributes.textFont;
+    this.original.textFont = textFont;
+  }
+
+  getFontAlertatives() {
+    const textFont = this.original.textFont,
+      family = getFontFamily(textFont),
+      styleMatch = /^([\w\ ]*?)\s*(italic)?\s*?$/i,
+      regularMatch = /^(roman|regular|$)/i,
+      style = textFont.style.match(styleMatch),
+      weight = style[1],
+      italic = style[2];
+
+    family.forEach((f) => {
+      let fStyle = f.style.match(styleMatch);
+      if (
+        weight === fStyle[1] ||
+        (regularMatch.test(weight) && regularMatch.test(fStyle[1]))
+      ) {
+        if (italic && fStyle[2]) return;
+        if (!italic && !fStyle[2]) return;
+        this.fonts.italic = f;
+      }
+    });
+
+    if (!this.fonts.italic) this.fonts.italic = textFont;
+  }
+
+  italicize() {
+    if (!this.fonts.italic) this.getFontAlertatives();
+    const itMatch = /(?:^|[^\w])(_[^_]*?_)(?!\w)/g;
+
+    let workingText = this.obj.contents;
+
+    if(itMatch.test(workingText)) {
+      let italicText = workingText.match(itMatch);
+
+      
+      italicText.forEach(t => {
+        let text = t[0] === '_' ? t : t.substring(1);
+        let workingTextRange = this.obj.textRange,
+        start = workingText.indexOf(text),
+        end = start + text.length;
+
+        workingTextRange.start = start;
+        workingTextRange.end = end;
+        workingTextRange.characterAttributes.textFont = this.fonts.italic;
+        workingTextRange.contents = text.slice(1, -1);
+
+        workingText = workingText.substring(0, start) + text.slice(1, -1) + workingText.substring(end);
+      })
+    }
   }
 
   expandOptions() {
@@ -164,6 +222,11 @@ class AiTextBox {
 
   setColor(hex) {
     let rgb = hexToRgb(hex);
+    if (rgb === null) {
+      alert(`Error thrown while setting text color.
+      '${hex}' must be formatted as a hex color to be used as a color value.`);
+      return;
+    }
     let fill = new RGBColor();
 
     fill.red = rgb.r;

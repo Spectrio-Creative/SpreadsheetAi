@@ -5,6 +5,7 @@ class AiPageItem {
     this.stored = { height: 0, width: 0, top: 0, left: 0 };
     this.options = options;
     this.getDimensions();
+    this.getPosition();
     this.padding = [0, 0, 0, 0];
   }
 
@@ -38,7 +39,7 @@ class AiPageItem {
 
   hide() {
     this.storeSizeAndPosition();
-    this.setSize(.1, .1);
+    this.setSize(0.1, 0.1);
     this.setPosition(
       this.obj.parent.left + this.obj.parent.width,
       this.obj.parent.top - this.obj.parent.height
@@ -73,8 +74,8 @@ class AiPageItem {
 
   offset(axis) {
     let offset = {
-      y: 0, //(this.obj.textPath.height - this.original.height),
-      x: 0, //(this.obj.textPath.width - this.original.width),
+      y: this.obj.height - this.original.height,
+      x: this.obj.width - this.original.width,
     };
 
     if (axis) return offset[axis];
@@ -103,6 +104,11 @@ class AiPageItem {
     this.original.height = this.obj.height;
     this.original.width = this.obj.width;
     this.original.ratio = this.obj.width / this.obj.height;
+  }
+
+  getPosition() {
+    this.original.top = this.obj.top;
+    this.original.left = this.obj.left;
   }
 
   storeSizeAndPosition() {
