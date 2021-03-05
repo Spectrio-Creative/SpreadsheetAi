@@ -1,4 +1,5 @@
 import { active_document, application_path } from "../globals/document";
+import { isStringLocation, parseLocation } from "../tools/classTools";
 
 class AiImage {
   constructor(item, url, options) {
@@ -10,6 +11,9 @@ class AiImage {
     ];
 
     this.model = item;
+    active_document.selection = [item];
+    app.executeMenuCommand("group");
+
     this.obj = item.parent.placedItems.add();
     this.hasImage = false;
     this.options = options;
@@ -26,9 +30,7 @@ class AiImage {
       this.options.location
         ? this.setLocation(this.options.location)
         : this.setLocation("center");
-      
-      active_document.selection = [this.obj, this.model];
-      app.executeMenuCommand("group");
+
       this.parent = this.obj.parent;
       this.obj.move(this.parent, ElementPlacement.PLACEATEND);
       this.toggleClip(true);
@@ -84,6 +86,11 @@ class AiImage {
           : this.obj[secondDim] / this.original.ratio;
         break;
 
+      case "original":
+        this.obj[keyDim] = this.original[keyDim];
+        this.obj[secondDim] = this.original[secondDim];
+        break;
+
       default:
         break;
     }
@@ -113,54 +120,41 @@ class AiImage {
   }
 
   setLocation(x, y) {
-    x = x || "top";
-    y = y || x === "center" ? "center" : "left";
+    if (!y && isStringLocation(x)) {
+      let loc = parseLocation(x);
+      x = loc.x;
+      y = loc.y;
+    }
 
-    const exes = {
-      top: this.model.top,
-      center: (this.obj.height - this.model.height) / 2 + this.model.top,
-      bottom: this.model.top + (this.obj.height - this.model.height),
-    };
+    if (typeof x === "string") {
+      if (/^(top|bottom)$/.test(x)) {
+        y = x;
+        x = "center";
+      }
 
-    const whys = {
-      left: this.model.left,
-      center: (this.model.width - this.obj.width) / 2 + this.model.left,
-      bottom: this.model.left + (this.obj.width - this.model.width),
-    };
+      x = x || "left";
+      y = y || (x === "center" ? "center" : "top");
 
-    this.obj.top = exes[x] ? exes[x] : this.obj.top;
-    this.obj.left = whys[y] ? whys[y] : this.obj.left;
+      const whys = {
+        top: this.model.top,
+        center:
+          (-1 * (this.model.height - this.obj.height)) / 2 + this.model.top,
+        bottom: this.model.top - (this.model.height - this.obj.height),
+      };
 
-    // switch (y) {
-    //   case "left":
-    //     this.obj.left = this.model.left;
-    //     break;
+      const exes = {
+        left: this.model.left,
+        center: (this.model.width - this.obj.width) / 2 + this.model.left,
+        right: this.model.left + (this.model.width - this.obj.width),
+      };
 
-    //   case "center":
-    //     this.obj.left =
-    //       this.model.left + (this.model.width - this.obj.width) / 2;
-    //     break;
+      this.obj.top = y in whys ? whys[y] : this.obj.top;
+      this.obj.left = x in exes ? exes[x] : this.obj.left;
+      return;
+    }
 
-    //   default:
-    //     break;
-    // }
-
-    // x = x ? x : "top";
-    // y = y ? y : x === "center" ? "center" : "left";
-
-    // exes = {
-    //   top: this.model.top,
-    //   center: this.model.top + (this.obj.height - this.model.height) / 2,
-    //   bottom: this.model.top + (this.obj.height - this.model.height),
-    // };
-    // whys = {
-    //   left: this.model.left,
-    //   center: this.model.left + (this.obj.width - this.model.width) / 2,
-    //   bottom: this.model.left + (this.obj.width - this.model.width),
-    // };
-
-    // this.obj.top = exes[x] ? exes[x] : this.obj.top;
-    // this.obj.left = whys[y] ? whys[y] : this.obj.left;
+    this.obj.top = y;
+    this.obj.left = x;
   }
 }
 

@@ -1,15 +1,28 @@
-import { stringToObj } from "../tools/tools";
+import { getLayerSheetCC, layer_sheet } from "../globals/globals";
+import { deMoustache } from "../tools/textTools";
+import { hexToRgb, stringToObj } from "../tools/tools";
 
 class AiTextBox {
   constructor(item, value, options) {
     this.obj = item;
 
     // Set value if value is given
-    if (value) this.setText(value);
+    if (value) {
+      let sanatizedVal = value.replace(/""/g, '"');
+      if (/^(['"]).*\1$/.test(sanatizedVal))
+        sanatizedVal = sanatizedVal.slice(1, -1);
+
+      this.setText(sanatizedVal);
+    }
 
     this.options = options;
+    this.expandOptions();
     this.original = { height: 0, width: 0 };
     this.getDimensions();
+    if(options.color) {
+      const layer_sheet_cc = getLayerSheetCC();
+      this.setColor(layer_sheet_cc[options.color])
+    }
   }
 
   setText(value) {
@@ -48,6 +61,20 @@ class AiTextBox {
     this.original.width = this.obj.textPath.width;
   }
 
+  expandOptions() {
+    this.maxHeightInPixels = Number.POSITIVE_INFINITY;
+    if (this.options) {
+      if (this.options.maxHeight) {
+        let lineHeight =
+          (this.obj.paragraphs[0].autoLeadingAmount *
+            this.obj.textRange.characterAttributes.size) /
+          100;
+
+        this.maxHeightInPixels = this.options.maxHeight * lineHeight;
+      }
+    }
+  }
+
   overset() {
     const textBox = this.obj;
 
@@ -69,9 +96,10 @@ class AiTextBox {
     while (this.overset()) {
       this.obj.textRange.characterAttributes.size -= 1;
     }
+    this.resizeBox(true);
   }
 
-  resizeBox() {
+  resizeBox(cancelFitting) {
     let orHeight = this.obj.textPath.height;
     this.obj.textPath.height = 10000;
     let lineHeight =
@@ -81,31 +109,68 @@ class AiTextBox {
       isolatedLeading =
         lineHeight - this.obj.textRange.characterAttributes.size,
       linesN = this.obj.lines.length,
-      projectedH = lineHeight * linesN - isolatedLeading,
-      maxH = this.options.maxHeight
-        ? this.options.maxHeight
-        : Number.POSITIVE_INFINITY;
+      projectedH = lineHeight * linesN - isolatedLeading;
 
-    if (maxH * lineHeight < projectedH)
-      projectedH = this.options.maxHeight * lineHeight - isolatedLeading;
+    if (this.maxHeightInPixels < projectedH)
+      projectedH = this.maxHeightInPixels - isolatedLeading;
 
     this.obj.textPath.height = projectedH;
-    this.fitToBox();
+    if (!cancelFitting) this.fitToBox();
+    if (linesN === 1) this.resizeBoxWidth();
 
     return projectedH - orHeight;
   }
 
-  replaceMoustaches(lookup) {
-    if (!lookup) return;
-    for (key in lookup) {
-      moustache = new RegExp(
-        "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
-        "i"
-      );
-      if (moustache.test(this.text())) {
-        this.setText(this.text().replace(moustache, lookup[key]));
+  resizeBoxWidth() {
+    let lineLength = this.longestLine().length;
+
+    while (
+      this.longestLine().length >= lineLength &&
+      this.obj.textPath.width > 10
+    ) {
+      this.obj.textPath.width -= 10;
+    }
+
+    while (this.longestLine().length < lineLength) {
+      this.obj.textPath.width += 0.5;
+    }
+  }
+
+  longestLine() {
+    let lines = this.obj.lines;
+    let line = 0,
+      length = 0;
+    if (lines.length === 1) return { line, length: lines[0].characters.length };
+    for (let i = 0; i < lines.length; i++) {
+      let characters = this.obj.lines[i].characters;
+      if (characters.length > length) {
+        line = i;
+        length = characters.length;
       }
     }
+
+    return { line, length };
+  }
+
+  replaceMoustaches(lookup) {
+    if (!lookup) return;
+    const newText = deMoustache(this.text(), lookup);
+    if (newText !== this.text()) {
+      this.setText(newText);
+      return true;
+    }
+    return false;
+  }
+
+  setColor(hex) {
+    let rgb = hexToRgb(hex);
+    let fill = new RGBColor();
+
+    fill.red = rgb.r;
+    fill.green = rgb.g;
+    fill.blue = rgb.b;
+
+    this.obj.textRange.characterAttributes.fillColor = fill;
   }
 }
 

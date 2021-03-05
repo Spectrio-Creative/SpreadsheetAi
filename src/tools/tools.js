@@ -17,6 +17,21 @@ function getTextContent(wordsObj) {
   return fullString;
 }
 
+function camelCase(str) {
+  let camArr = str.match(/([a-z]+|[A-Z]\w+)/g);
+  camArr[0] = camArr[0].toLowerCase();
+  let newStr = "";
+  camArr.forEach((v, i) => {
+    if (i === 0) {
+      newStr += v;
+      return;
+    }
+    newStr += v[0].toUpperCase() + v.substring(1);
+  });
+
+  return newStr;
+}
+
 function priceCheck(priceString) {
   var priceType = "price (special)";
   //    if(/\$[0-9]*[\,]*[0-9]*[\.]*[0-9]* each/i.test(priceString)) priceType = "price ($each)";
@@ -123,6 +138,26 @@ function stringToObj(str) {
   return JSON.parse(jsonStr);
 }
 
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 export {
   clean,
   getTextContent,
@@ -134,4 +169,7 @@ export {
   replaceMoustaches,
   recursiveLayerLoop,
   stringToObj,
+  hexToRgb,
+  rgbToHex,
+  camelCase,
 };
