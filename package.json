@@ -1,22 +1,25 @@
 {
   "name": "spreadsheet-ai",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config"
+    "build": "rollup --config && terser --compress --mangle -o ./build/SpreadsheetAi.min.jsx --ecma 3 -- ./build/SpreadsheetAi.jsx"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "babel-preset-extendscript": "^1.0.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "rollup": "^2.35.1",
     "rollup-plugin-string": "^3.0.0",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "terser": "^5.6.0"
   }
 }
