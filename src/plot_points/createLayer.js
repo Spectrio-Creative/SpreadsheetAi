@@ -15,7 +15,9 @@ function createLayer(num) {
   }
 
   // Make the template active so we can copy it
+  // alert(active_document.activeLayer);
   active_document.activeLayer = template;
+  // dummyLayer.remove();
   // Copy the layer
 
   // Script is finished running when template's parent
@@ -32,7 +34,7 @@ function createLayer(num) {
         !createLayer.circleBack
           ? (createLayer.circleBack = [layer_sheet])
           : createLayer.circleBack.includes(layer_sheet)
-          ? alert(
+            ? alert(
               `Failed to create layer ${
                 layer_sheet["layer name"]
                   ? layer_sheet["layer name"]
@@ -41,7 +43,7 @@ function createLayer(num) {
             We’re not sure what went wrong, but you might also try running the script again with a different template selected (strange, I know).
             `
             )
-          : createLayer.circleBack.push(layer_sheet);
+            : createLayer.circleBack.push(layer_sheet);
         return;
       }
 

@@ -72,27 +72,27 @@ class AiImage {
       secondDim = keyIsWidth ? "height" : "width";
 
     switch (option) {
-      case "contain":
-        this.obj[keyDim] = this.model[keyDim];
-        this.obj[secondDim] = keyIsWidth
-          ? this.obj[keyDim] / this.original.ratio
-          : this.obj[keyDim] * this.original.ratio;
-        break;
+    case "contain":
+      this.obj[keyDim] = this.model[keyDim];
+      this.obj[secondDim] = keyIsWidth
+        ? this.obj[keyDim] / this.original.ratio
+        : this.obj[keyDim] * this.original.ratio;
+      break;
 
-      case "cover":
-        this.obj[secondDim] = this.model[secondDim];
-        this.obj[keyDim] = keyIsWidth
-          ? this.obj[secondDim] * this.original.ratio
-          : this.obj[secondDim] / this.original.ratio;
-        break;
+    case "cover":
+      this.obj[secondDim] = this.model[secondDim];
+      this.obj[keyDim] = keyIsWidth
+        ? this.obj[secondDim] * this.original.ratio
+        : this.obj[secondDim] / this.original.ratio;
+      break;
 
-      case "original":
-        this.obj[keyDim] = this.original[keyDim];
-        this.obj[secondDim] = this.original[secondDim];
-        break;
+    case "original":
+      this.obj[keyDim] = this.original[keyDim];
+      this.obj[secondDim] = this.original[secondDim];
+      break;
 
-      default:
-        break;
+    default:
+      break;
     }
   }
 

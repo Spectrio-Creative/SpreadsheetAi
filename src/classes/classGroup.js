@@ -88,11 +88,11 @@ class AiGroupItem extends AiPageItem {
     let padding = this.background.options.padding
       ? this.background.options.padding
       : [
-          -(this.obj.top - prior.top),
-          -(this.obj.left + this.obj.width - (prior.left + prior.width)),
-          this.obj.top - this.obj.height - (prior.top - prior.height),
-          this.obj.left - prior.left,
-        ];
+        -(this.obj.top - prior.top),
+        -(this.obj.left + this.obj.width - (prior.left + prior.width)),
+        this.obj.top - this.obj.height - (prior.top - prior.height),
+        this.obj.left - prior.left,
+      ];
 
     this.background.setPadding(padding);
     this.background.unHide();

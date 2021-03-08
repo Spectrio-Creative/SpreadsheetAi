@@ -1,7 +1,7 @@
-import { getLayerSheetCC, layer_sheet } from "../globals/globals";
+import { getLayerSheetCC } from "../globals/globals";
 import { getFontFamily } from "../tools/classTools";
 import { deMoustache } from "../tools/textTools";
-import { hexToRgb, stringToObj } from "../tools/tools";
+import { hexToRgb } from "../tools/tools";
 
 class AiTextBox {
   constructor(item, value, options) {
@@ -9,7 +9,7 @@ class AiTextBox {
 
     // Set value if value is given
     if (value) {
-      let sanatizedVal = value.replace(/""/g, '"');
+      let sanatizedVal = value.replace(/""/g, "\"");
       if (/^(['"]).*\1$/.test(sanatizedVal))
         sanatizedVal = sanatizedVal.slice(1, -1);
 
@@ -20,6 +20,7 @@ class AiTextBox {
     this.expandOptions();
     this.original = { height: 0, width: 0 };
     this.getDimensions();
+    this.getPosition();
     this.getFont();
     this.fonts = { regular: this.original.textFont };
     if (options.color) {
@@ -64,15 +65,20 @@ class AiTextBox {
     this.original.width = this.obj.textPath.width;
   }
 
+  getPosition() {
+    this.original.top = this.obj.top;
+    this.original.left = this.obj.left;
+  }
+
   getFont() {
     const textFont = this.obj.textRange.characterAttributes.textFont;
     this.original.textFont = textFont;
   }
 
-  getFontAlertatives() {
+  getFontAltertatives() {
     const textFont = this.original.textFont,
       family = getFontFamily(textFont),
-      styleMatch = /^([\w\ ]*?)\s*(italic)?\s*?$/i,
+      styleMatch = /^([\w ]*?)\s*(italic)?\s*?$/i,
       regularMatch = /^(roman|regular|$)/i,
       style = textFont.style.match(styleMatch),
       weight = style[1],
@@ -94,28 +100,30 @@ class AiTextBox {
   }
 
   italicize() {
-    if (!this.fonts.italic) this.getFontAlertatives();
+    if (!this.fonts.italic) this.getFontAltertatives();
     const itMatch = /(?:^|[^\w])(_[^_]*?_)(?!\w)/g;
 
     let workingText = this.obj.contents;
 
-    if(itMatch.test(workingText)) {
+    if (itMatch.test(workingText)) {
       let italicText = workingText.match(itMatch);
 
-      
-      italicText.forEach(t => {
-        let text = t[0] === '_' ? t : t.substring(1);
+      italicText.forEach((t) => {
+        let text = t[0] === "_" ? t : t.substring(1);
         let workingTextRange = this.obj.textRange,
-        start = workingText.indexOf(text),
-        end = start + text.length;
+          start = workingText.indexOf(text),
+          end = start + text.length;
 
         workingTextRange.start = start;
         workingTextRange.end = end;
         workingTextRange.characterAttributes.textFont = this.fonts.italic;
         workingTextRange.contents = text.slice(1, -1);
 
-        workingText = workingText.substring(0, start) + text.slice(1, -1) + workingText.substring(end);
-      })
+        workingText =
+          workingText.substring(0, start) +
+          text.slice(1, -1) +
+          workingText.substring(end);
+      });
     }
   }
 
@@ -135,12 +143,18 @@ class AiTextBox {
 
   overset() {
     const textBox = this.obj;
+    const calculateVisible = (lines) => {
+      let total = 0;
+      for (let i = 0; i < lines.length; i++) {
+        total += lines[0].characters.length;
+      }
+      return total;
+    };
 
     if (textBox.lines.length > 0) {
-      if (
-        textBox.lines[0].characters.length * textBox.lines.length <
-        textBox.characters.length
-      ) {
+      let visibleLines = calculateVisible(textBox.lines);
+      // alert(`${visibleLines} > ${textBox.characters.length}`);
+      if (visibleLines < textBox.characters.length) {
         return true;
       } else {
         return false;
@@ -160,21 +174,30 @@ class AiTextBox {
   resizeBox(cancelFitting) {
     let orHeight = this.obj.textPath.height;
     this.obj.textPath.height = 10000;
-    let lineHeight =
-        (this.obj.paragraphs[0].autoLeadingAmount *
-          this.obj.textRange.characterAttributes.size) /
-        100,
+    let lineHeight = this.obj.textRange.characterAttributes.leading,
       isolatedLeading =
         lineHeight - this.obj.textRange.characterAttributes.size,
       linesN = this.obj.lines.length,
       projectedH = lineHeight * linesN - isolatedLeading;
+
+    // alert(`resizeBox
+    // this.obj.textRange.characterAttributes.size: ${this.obj.textRange.characterAttributes.size}
+    // this.obj.paragraphs[0].autoLeadingAmount: ${this.obj.paragraphs[0].autoLeadingAmount}
+    // lineHeight: ${lineHeight}
+    // isolatedLeading: ${isolatedLeading}
+    // characterAttributes.autoLeading: ${this.obj.textRange.characterAttributes.autoLeading}
+    // characterAttributes.leading: ${this.obj.textRange.characterAttributes.leading}
+    // linesN: ${linesN}
+    // projectedH: ${projectedH}
+    // this.maxHeightInPixels: ${this.maxHeightInPixels}
+    // `);
 
     if (this.maxHeightInPixels < projectedH)
       projectedH = this.maxHeightInPixels - isolatedLeading;
 
     this.obj.textPath.height = projectedH;
     if (!cancelFitting) this.fitToBox();
-    if (linesN === 1) this.resizeBoxWidth();
+    if (cancelFitting && linesN === 1) this.resizeBoxWidth();
 
     return projectedH - orHeight;
   }
@@ -191,6 +214,25 @@ class AiTextBox {
 
     while (this.longestLine().length < lineLength) {
       this.obj.textPath.width += 0.5;
+    }
+
+    // Respect text alignment
+    let widthDifference = this.original.width - this.obj.textPath.width;
+    switch (
+      this.obj.textRange.paragraphAttributes.justification
+        .toString()
+        .toLowerCase()
+        .replace("justification.", "")
+        .replace("fulljustify", "")
+    ) {
+    case "center":
+      this.obj.left = widthDifference / 2 + this.original.left;
+      break;
+    case "right":
+      this.obj.left = this.original.left + widthDifference;
+      break;
+    default:
+      break;
     }
   }
 

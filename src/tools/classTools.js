@@ -1,7 +1,7 @@
 import { layer_options } from "./regExTests";
 import { stringToObj } from "./tools";
 
-const locationsAsSingleString = /^([\w\.]+)\ ([\w\.]+)/;
+const locationsAsSingleString = /^([\w.]+) ([\w.]+)/;
 
 const isStringLocation = (location) => {
   return locationsAsSingleString.test(location);
@@ -30,20 +30,19 @@ const parseLocation = (location) => {
 
 const getGroupAlignment = (group) => {
   if (group.pageItems.length > 2) return { x: "center", y: "center" };
-  let textAlignment = "center",
-    backgroundExists = false;
+  let textAlignment = "center";
 
   group.pageItems.forEach((item) => {
     const options = layer_options.test(item.name)
       ? stringToObj(item.name.match(layer_options)[1])
       : {};
+    console.log(options);
     if (item.typename === "TextFrame")
       textAlignment = item.textRange.paragraphAttributes.justification
         .toString()
         .toLowerCase()
         .replace("justification.", "")
         .replace("fulljustify", "");
-    if (options.groupBackground) backgroundExists = true;
   });
 
   let groupAlignment = /^(left|right|center)$/.test(textAlignment)
@@ -54,7 +53,7 @@ const getGroupAlignment = (group) => {
 };
 
 const getFontFamily = (textFont) => {
-  return app.textFonts.filter(tf => tf.family === textFont.family);
-}
+  return app.textFonts.filter((tf) => tf.family === textFont.family);
+};
 
 export { isStringLocation, parseLocation, getGroupAlignment, getFontFamily };

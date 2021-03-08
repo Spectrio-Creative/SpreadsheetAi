@@ -5,9 +5,9 @@ function deMoustache(original, lookup, bannedKeys) {
 
   let moustacheless = original;
   bannedKeys = bannedKeys || [];
-  if(!Array.isArray(bannedKeys)) alert('Banned Keys must be presented as an Array');
+  if(!Array.isArray(bannedKeys)) alert("Banned Keys must be presented as an Array");
 
-  for (key in lookup) {
+  for (let key in lookup) {
     let moustache = new RegExp(
       "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
       "i"

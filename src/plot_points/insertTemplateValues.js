@@ -17,7 +17,7 @@ function fillLayer(item) {
     ? stringToObj(item.name.match(layer_options)[1])
     : {};
   // If the item name is if found in the spreadsheet
-  for (key in layer_sheet) {
+  for (let key in layer_sheet) {
     const key_match = key_test(key);
 
     if (key_match.test(item.name)) {
@@ -60,9 +60,10 @@ function fillLayer(item) {
   return new AiPageItem(item, options);
 }
 
-function fillFromTemplate(layer, options, parent) {
+function fillFromTemplate(layer, options) {
   let offset = { x: 0, y: 0 };
   layer.pageItems.forEach((item) => {
+    let currentItem;
     if (item.typename === "GroupItem") {
       const options = layer_options.test(item.name)
         ? stringToObj(item.name.match(layer_options)[1])
@@ -72,18 +73,20 @@ function fillFromTemplate(layer, options, parent) {
       fillFromTemplate(item, ["offset"], group);
       group.setBackground();
       group.setPosition();
+
+      currentItem = group;
     } else {
       let filled = fillLayer(item);
-      if (filled) {
-        if (options && options.includes("offset")) {
-          // For the moment, only move y
-          // ToDo: Sort out horizontal shifting
-          filled.move(0, offset.y);
+      if (filled) currentItem = filled;
+    }
 
-          offset.x += filled.offset().x;
-          offset.y += filled.offset().y;
-        }
-      }
+    if (options && options.includes("offset") && currentItem) {
+      // For the moment, only move y
+      // ToDo: Sort out horizontal shifting
+      currentItem.move(0, offset.y);
+
+      offset.x += currentItem.offset().x;
+      offset.y += currentItem.offset().y;
     }
   });
 }
