@@ -1,7 +1,8 @@
 // Illustrator reserves the keyword 'version', but we need it for our own version;
-let version = 1;
-let aiVersion = version;
-console.log(aiVersion);
+const version = 1;
+const aiVersion = version;
+$.write(aiVersion);
+
 import { setUpArrayMethods } from "./tools/extensions/arrayMethods";
 import { extendExtendscript } from "./tools/extensions/jsxMethods";
 import convertObj from "./tools/convertObj";
@@ -49,9 +50,7 @@ const main = () => {
           createLayer(i);
         }
 
-        createLayer.circleBack = createLayer.circleBack
-          ? createLayer.circleBack
-          : [];
+        createLayer.circleBack = createLayer.circleBack ? createLayer.circleBack : [];
         for (let i = 0; i < createLayer.circleBack.length; i++) {
           setLayerSheet(createLayer.circleBack[i]);
           createLayer(i);
