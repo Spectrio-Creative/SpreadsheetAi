@@ -1,5 +1,6 @@
 function extendExtendscript() {
-  $.setTimeout = function (func, time) {
+  // @ts-expect-error
+  $.setTimeout = function (func: () => unknown, time: number) {
     $.sleep(time);
     func();
   };

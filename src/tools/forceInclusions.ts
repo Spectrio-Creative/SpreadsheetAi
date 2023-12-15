@@ -10,9 +10,9 @@ function forceInclusions() {
   // Object.create and Object.defineProperties
   const boogle = { fish: "fingers" };
   const doubleBoo = Object.create(boogle);
-  console.log(doubleBoo.fish);
+  $.write(doubleBoo.fish);
 
-  const object1 = {};
+  const object1 = {} as { property1: { value: number; writeable: boolean }; property2: string };
   Object.defineProperties(object1, {
     property1: {
       value: 42,
@@ -20,7 +20,7 @@ function forceInclusions() {
     },
     property2: {},
   });
-  console.log(object1.property1);
+  $.write(object1.property1);
 }
 
 export { forceInclusions };

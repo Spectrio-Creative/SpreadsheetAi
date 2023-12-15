@@ -28,7 +28,7 @@ const parseLocation = (location) => {
   }
 };
 
-const getGroupAlignment = (group) => {
+const getGroupAlignment = (group: GroupItem) => {
   if (group.pageItems.length > 2) return { x: "center", y: "center" };
   let textAlignment = "center";
 
@@ -36,16 +36,16 @@ const getGroupAlignment = (group) => {
     const options = layer_options.test(item.name)
       ? stringToObj(item.name.match(layer_options)[1])
       : {};
-    console.log(options);
+    $.write(options);
     if (item.typename === "TextFrame")
-      textAlignment = item.textRange.paragraphAttributes.justification
+      textAlignment = (item as TextFrame).textRange.paragraphAttributes.justification
         .toString()
         .toLowerCase()
         .replace("justification.", "")
         .replace("fulljustify", "");
   });
 
-  let groupAlignment = /^(left|right|center)$/.test(textAlignment)
+  const groupAlignment = /^(left|right|center)$/.test(textAlignment)
     ? textAlignment
     : "center";
 

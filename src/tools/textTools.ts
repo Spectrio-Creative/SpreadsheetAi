@@ -7,8 +7,8 @@ function deMoustache(original, lookup, bannedKeys) {
   bannedKeys = bannedKeys || [];
   if(!Array.isArray(bannedKeys)) alert("Banned Keys must be presented as an Array");
 
-  for (let key in lookup) {
-    let moustache = new RegExp(
+  for (const key in lookup) {
+    const moustache = new RegExp(
       "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
       "i"
     );
@@ -25,7 +25,7 @@ function deMoustache(original, lookup, bannedKeys) {
         continue;
       }
 
-      let replacementText = hasMoustaches.test(lookup[key])
+      const replacementText = hasMoustaches.test(lookup[key])
         ? deMoustache(lookup[key], lookup, [...bannedKeys, key])
         : lookup[key];
 

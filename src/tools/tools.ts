@@ -1,6 +1,6 @@
 function clean(arr) {
-  var newArr = [];
-  for (var i = 0; i < arr.length; i++) {
+  const newArr = [];
+  for (let i = 0; i < arr.length; i++) {
     if (arr[i] !== "" && arr[i] !== null && arr[i] !== undefined) {
       newArr.push(arr[i]);
     }
@@ -9,8 +9,8 @@ function clean(arr) {
 }
 
 function getTextContent(wordsObj) {
-  var fullString = "";
-  for (var i = 0; i < wordsObj.length; i++) {
+  let fullString = "";
+  for (let i = 0; i < wordsObj.length; i++) {
     if (i !== 0) fullString += " ";
     fullString += wordsObj[i].contents;
   }
@@ -18,7 +18,7 @@ function getTextContent(wordsObj) {
 }
 
 function camelCase(str) {
-  let camArr = str.match(/([a-z]+|[A-Z]\w+)/g);
+  const camArr = str.match(/([a-z]+|[A-Z]\w+)/g);
   camArr[0] = camArr[0].toLowerCase();
   let newStr = "";
   camArr.forEach((v, i) => {
@@ -33,7 +33,7 @@ function camelCase(str) {
 }
 
 function priceCheck(priceString) {
-  var priceType = "price (special)";
+  let priceType = "price (special)";
   //    if(/\$[0-9]*[\,]*[0-9]*[\.]*[0-9]* each/i.test(priceString)) priceType = "price ($each)";
   if (/buy [0-9]+ get [0-9]+/i.test(priceString)) {
     priceType = "price (getxfree)";
@@ -48,9 +48,9 @@ function priceCheck(priceString) {
 }
 
 function reduceText(textItem, rOption, overflow) {
-  var orHeight = textItem.textPath.height;
+  const orHeight = textItem.textPath.height;
   if (overflow) textItem.textPath.height = 10000;
-  var lineHeight =
+  const lineHeight =
       (textItem.paragraphs[0].autoLeadingAmount *
         textItem.textRange.characterAttributes.size) /
       100,
@@ -66,8 +66,9 @@ function reduceText(textItem, rOption, overflow) {
 }
 
 function reduceGroup(groupItem, wLimit) {
-  var originalWidth = groupItem.width,
-    difference = 0;
+  const originalWidth = groupItem.width;
+  let difference = 0;
+
   groupItem.resize(
     (100 * wLimit) / originalWidth,
     (100 * wLimit) / originalWidth
@@ -82,7 +83,7 @@ function reduceGroup(groupItem, wLimit) {
 }
 
 function arrIncludes(arr, str) {
-  for (var i = 0; i < arr.length; i++) {
+  for (let i = 0; i < arr.length; i++) {
     if (arr[i] === str) return true;
   }
   return false;
@@ -91,7 +92,7 @@ function arrIncludes(arr, str) {
 function loopBackwards(arr, callback) {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (callback) {
-      let command = callback(arr[i]);
+      const command = callback(arr[i]);
       if (command === "stop") return;
     }
   }
@@ -139,7 +140,7 @@ function stringToObj(str) {
 }
 
 function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
       r: parseInt(result[1], 16),
@@ -150,7 +151,7 @@ function hexToRgb(hex) {
 }
 
 function componentToHex(c) {
-  var hex = c.toString(16);
+  const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 }
 
