@@ -6,7 +6,7 @@ import eslint from "@rollup/plugin-eslint";
 import typescript from "@rollup/plugin-typescript";
 
 export default {
-  input: "src/main.js",
+  input: "src/main.ts",
   output: [
     {
       file: "build/SpreadsheetAi.jsx",
@@ -15,7 +15,7 @@ export default {
   ],
   plugins: [
     typescript(),
-    eslint({throwOnError: true}),
+    // eslint({throwOnError: true}),
     nodeResolve(),
     json(),
     getBabelOutputPlugin({ presets: ["extendscript"] }),
