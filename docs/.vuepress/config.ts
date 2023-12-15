@@ -2,7 +2,7 @@ import { defaultTheme } from "@vuepress/theme-default";
 import { searchPlugin } from "@vuepress/plugin-search";
 // import { containerPlugin } from '@vuepress/plugin-container'
 
-const base = process.env.NODE_ENV === "production" ? "/creative/tools/sorcerers-apprentice/" : "/";
+const base = process.env.NODE_ENV === "production" ? "/creative/tools/spreadsheet-ai/" : "/";
 
 module.exports = {
   title: "Spreadsheet Ai (the docs)",
@@ -27,7 +27,7 @@ module.exports = {
         },
         {
           text: "Downloads",
-          link: "https://github.com/Spectrio-Creative/sorcerers-apprentice/releases",
+          link: "https://github.com/Spectrio-Creative/SpreadsheetAi/releases",
         }
       ],
     },
