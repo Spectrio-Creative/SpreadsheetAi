@@ -15,7 +15,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  ignorePatterns: ["package.json", "actions/*"],
+  ignorePatterns: ["package.json", "actions/*", "build/*", "dist/*"],
   rules: {
     indent: ["error", 2],
     "linebreak-style": ["error", "unix"],

@@ -109,3 +109,6 @@ dist
 build/
 
 _oldFilesForReference_/
+
+.temp
+.cache
