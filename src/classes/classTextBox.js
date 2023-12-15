@@ -5,6 +5,15 @@ import { hexToRgb } from "../tools/tools";
 
 class AiTextBox {
   constructor(item, value, options) {
+    // Throw error if text box is not of type TextType.AREATEXT
+    if (String(item.kind) === "TextType.POINTTEXT") {
+      item.convertPointObjectToAreaObject();
+    }
+
+    if (String(item.kind) !== "TextType.AREATEXT") {
+      throw new Error(`Editable text boxes must be Area Text. Layer "${item.name}" is of type ${item.kind}.`);
+    }
+
     this.obj = item;
 
     // Set value if value is given
@@ -61,8 +70,18 @@ class AiTextBox {
   }
 
   getDimensions() {
-    this.original.height = this.obj.textPath.height;
-    this.original.width = this.obj.textPath.width;
+    try {
+      this.original.height = this.obj.textPath.height;
+      this.original.width = this.obj.textPath.width;
+    } catch (error) {
+      alert(`Error thrown while getting text dimensions.
+      layer: ${this.obj.name}
+      layer: ${this.obj.kind}
+      ${error.name}
+      ${error.message}
+      (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
+      throw error;
+    }
   }
 
   getPosition() {

@@ -6,7 +6,17 @@ import { layer_sheet } from "../globals/globals";
 
 function createLayer(num) {
   const project_layers = active_document.layers;
-  const template_title = layer_sheet["template"]; // Add logic for variable template ref
+  let template_title = layer_sheet["template"]; // Add logic for variable template ref
+  template_title = template_title || layer_sheet["layer template"];
+
+  // If no template column, alert and exit
+  if (template_title === undefined) {
+    alert(
+      "No template column in spreadsheet.\nPlease add a \"template\" column on your spreadsheet."
+    );
+    return;
+  }
+
   const template = findTemplate(project_layers, template_title);
 
   if (template === undefined) {

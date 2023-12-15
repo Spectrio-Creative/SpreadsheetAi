@@ -3,6 +3,7 @@ import json from "@rollup/plugin-json";
 import { getBabelOutputPlugin } from "@rollup/plugin-babel";
 import { string } from "rollup-plugin-string";
 import eslint from "@rollup/plugin-eslint";
+import typescript from "@rollup/plugin-typescript";
 
 export default {
   input: "src/main.js",
@@ -13,6 +14,7 @@ export default {
     },
   ],
   plugins: [
+    typescript(),
     eslint({throwOnError: true}),
     nodeResolve(),
     json(),

@@ -7,7 +7,7 @@ class AiImage {
       url,
       application_path + "/" + url,
       application_path + "/links/" + url,
-      application_path + "/images/" + url,
+      application_path + "/images/sorcerer/" + url,
     ];
 
     this.model = item;
