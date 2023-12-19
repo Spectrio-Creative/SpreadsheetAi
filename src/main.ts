@@ -5,21 +5,26 @@ $.write(aiVersion);
 
 import { setUpArrayMethods } from "./tools/extensions/arrayMethods";
 import { extendExtendscript } from "./tools/extensions/jsxMethods";
-import convertObj from "./tools/convertObj";
 import { createLayer } from "./plot_points/createLayer";
-import { setLayerSheet } from "./globals/globals";
+import { circleBack, setLayerSheet } from "./globals/globals";
 import { version as scriptVersion } from "../package.json";
 import { forceInclusions } from "./tools/forceInclusions";
 import { cleanUp, prepare } from "./plot_points/setup";
+import { fromCSV } from './tools/csv';
+import { setUpStringMethods } from './tools/extensions/string';
 
 const main = () => {
   // Things work better when we've deselected
   // active_document.selection = null;
 
   alert(`SpreadsheetAi (v${scriptVersion})`);
+
+  // @ts-ignore
+  alert(ElementPlacement.PLACEATBEGINNING);
   prepare();
 
   const myFile = File.openDialog("Please select CSV Spreadsheet.");
+  setUpStringMethods();
   setUpArrayMethods();
   extendExtendscript();
   forceInclusions();
@@ -28,31 +33,27 @@ const main = () => {
     try {
       // open file
       const fileOK = myFile.open("r");
-      let fileObj = [],
-        fileObj2 = "";
+      let fileString = "";
       if (fileOK) {
-        let text;
         while (!myFile.eof) {
-          text = myFile.readln();
-          fileObj2 += text + "\\n";
+          // read each line of text
+          fileString += myFile.readln() + "\n";
         }
 
-        fileObj = fileObj2
-          .slice(0, -2)
-          .replace(/,(?!(?:[^"]|"[^"]*")*$)/g, "\\;")
-          .replace(/\\n(?!(?:[^"]|"[^"]*")*$)/g, "\\m")
-          .split(/\\n/g);
+        const fileObj = fromCSV({data: fileString, separator: ","}).toJSON() as SpreadsheetRow[];
 
-        fileObj = convertObj(fileObj);
+        fileObj.forEach((row, index) => {
+          alert(index + "\n" + JSON.stringify(row));
+        });
 
         for (let i = 0; i < fileObj.length; i++) {
           setLayerSheet(fileObj[i]);
           createLayer(i);
         }
 
-        createLayer.circleBack = createLayer.circleBack ? createLayer.circleBack : [];
-        for (let i = 0; i < createLayer.circleBack.length; i++) {
-          setLayerSheet(createLayer.circleBack[i]);
+        // createLayer.circleBack = createLayer.circleBack ? createLayer.circleBack : [];
+        for (let i = 0; i < circleBack.length; i++) {
+          setLayerSheet(circleBack[i]);
           createLayer(i);
         }
 

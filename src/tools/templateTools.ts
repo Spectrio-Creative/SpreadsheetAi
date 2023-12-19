@@ -1,8 +1,8 @@
 import { loopBackwards } from "./tools";
 
-function findTemplate(project_layers, template_title) {
-  let template;
-  function checkForTemplate(layer) {
+function findTemplate(project_layers: Layers, template_title: string) {
+  let template: Layer;
+  function checkForTemplate(layer: Layer) {
     const is_template = new RegExp(
       "^[\\s]*" + template_title.replace(" ", "[\\s]{0,1}") + "[\\s]*$",
       "i"

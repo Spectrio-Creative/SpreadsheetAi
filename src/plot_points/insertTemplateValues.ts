@@ -17,7 +17,7 @@ function fillLayer(item) {
     ? stringToObj(item.name.match(layer_options)[1])
     : {};
   // If the item name is if found in the spreadsheet
-  for (let key in layer_sheet) {
+  for (const key in layer_sheet) {
     const key_match = key_test(key);
 
     if (key_match.test(item.name)) {
@@ -46,7 +46,7 @@ function fillLayer(item) {
   // moustaches to be replaced
   if (item.typename === "TextFrame") {
     const new_textbox = new AiTextBox(item, undefined, options);
-    let moustaches = new_textbox.replaceMoustaches(layer_sheet);
+    const moustaches = new_textbox.replaceMoustaches(layer_sheet);
     new_textbox.italicize();
     // If data has changed, then we resize.
     if (moustaches) new_textbox.resizeBox();
@@ -60,8 +60,8 @@ function fillLayer(item) {
   return new AiPageItem(item, options);
 }
 
-function fillFromTemplate(layer, options) {
-  let offset = { x: 0, y: 0 };
+function fillFromTemplate(layer, options: string[] = []) {
+  const offset = { x: 0, y: 0 };
   layer.pageItems.forEach((item) => {
     let currentItem;
     if (item.typename === "GroupItem") {
@@ -70,13 +70,13 @@ function fillFromTemplate(layer, options) {
         : {};
 
       const group = new AiGroupItem(item, options);
-      fillFromTemplate(item, ["offset"], group);
+      fillFromTemplate(item, ["offset"]);
       group.setBackground();
       group.setPosition();
 
       currentItem = group;
     } else {
-      let filled = fillLayer(item);
+      const filled = fillLayer(item);
       if (filled) currentItem = filled;
     }
 

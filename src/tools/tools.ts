@@ -89,7 +89,7 @@ function arrIncludes(arr, str) {
   return false;
 }
 
-function loopBackwards(arr, callback) {
+function loopBackwards(arr: unknown[], callback: (unknown) => unknown) {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (callback) {
       const command = callback(arr[i]);
@@ -139,7 +139,7 @@ function stringToObj(str) {
   return JSON.parse(jsonStr);
 }
 
-function hexToRgb(hex) {
+function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {

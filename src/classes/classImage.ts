@@ -1,8 +1,20 @@
 import { active_document, application_path } from "../globals/document";
 import { isStringLocation, parseLocation } from "../tools/classTools";
 
+interface AiImageOptions {
+  size?: string;
+  location?: string;
+}
+
 class AiImage {
-  constructor(item, url, options) {
+  obj: PlacedItem;
+  hasImage: boolean;
+  options: AiImageOptions;
+  original: Box;
+  parent: GroupItem;
+  model: PageItem;
+
+  constructor(item: PageItem, url, options: AiImageOptions) {
     const file_urls = [
       url,
       application_path + "/" + url,
@@ -14,7 +26,7 @@ class AiImage {
     active_document.selection = [item];
     app.executeMenuCommand("group");
 
-    this.obj = item.parent.placedItems.add();
+    this.obj = (item.parent as GroupItem).placedItems.add();
     this.hasImage = false;
     this.options = options;
     this.original = { height: 0, width: 0 };
@@ -31,14 +43,15 @@ class AiImage {
         ? this.setLocation(this.options.location)
         : this.setLocation("center");
 
-      this.parent = this.obj.parent;
+      this.parent = this.obj.parent as GroupItem;
+      // @ts-ignore
       this.obj.move(this.parent, ElementPlacement.PLACEATEND);
       this.toggleClip(true);
     }
   }
 
-  attachImage(url, callback, onFail) {
-    let file = new File(url);
+  attachImage(url: string, callback?: () => unknown, onFail?: (e: unknown) => unknown) {
+    const file = new File(url);
     try {
       this.obj.file = file;
       this.hasImage = true;
@@ -63,13 +76,13 @@ class AiImage {
     this.original.ratio = this.width() / this.height();
   }
 
-  setSize(option) {
+  setSize(option?: string) {
     const modelRatio = this.model.width / this.model.height;
     option = option ? option : "contain";
 
-    let keyDim = this.original.ratio > modelRatio ? "width" : "height",
-      keyIsWidth = keyDim === "width",
-      secondDim = keyIsWidth ? "height" : "width";
+    const keyDim = this.original.ratio > modelRatio ? "width" : "height";
+    const keyIsWidth = keyDim === "width";
+    const secondDim = keyIsWidth ? "height" : "width";
 
     switch (option) {
     case "contain":
@@ -96,13 +109,13 @@ class AiImage {
     }
   }
 
-  toggleClip(force) {
-    let val = typeof force === "boolean" ? force : !this.parent.clipped;
+  toggleClip(force?: boolean) {
+    const val = typeof force === "boolean" ? force : !this.parent.clipped;
     this.parent.clipped = val;
   }
 
   offset(axis) {
-    let offset = {
+    const offset = {
       y: 0, //(this.obj.textPath.height - this.original.height),
       x: 0, //(this.obj.textPath.width - this.original.width),
     };
@@ -119,11 +132,11 @@ class AiImage {
     this.model.left -= x;
   }
 
-  setLocation(x, y) {
+  setLocation(x?: number | string, y?: number | string) {
     if (!y && isStringLocation(x)) {
-      let loc = parseLocation(x);
-      x = loc.x;
-      y = loc.y;
+      const location = parseLocation(x);
+      x = location.x;
+      y = location.y;
     }
 
     if (typeof x === "string") {
@@ -153,7 +166,7 @@ class AiImage {
       return;
     }
 
-    this.obj.top = y;
+    this.obj.top = typeof y === "number" ? y : this.obj.top;
     this.obj.left = x;
   }
 }

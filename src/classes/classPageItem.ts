@@ -1,5 +1,18 @@
+interface AiPageItemOptions {
+  maxHeight?: number;
+  color?: string;
+  align?: string;
+  padding?: [number, number, number, number];
+}
+
 class AiPageItem {
-  constructor(item, options) {
+  obj: PageItem;
+  original: Box;
+  stored: Box;
+  options: AiPageItemOptions;
+  padding: number[];
+
+  constructor(item: PageItem, options: AiPageItemOptions) {
     this.obj = item;
     this.original = { height: 0, width: 0, ratio: 1 };
     this.stored = { height: 0, width: 0, top: 0, left: 0 };
@@ -38,11 +51,12 @@ class AiPageItem {
   }
 
   hide() {
+    const parent = this.obj.parent as PageItem;
     this.storeSizeAndPosition();
     this.setSize(0.1, 0.1);
     this.setPosition(
-      this.obj.parent.left + this.obj.parent.width,
-      this.obj.parent.top - this.obj.parent.height
+      parent.left + parent.width,
+      parent.top - parent.height
     );
   }
 
@@ -64,7 +78,7 @@ class AiPageItem {
       return;
     }
 
-    let top = padding.top || 0,
+    const top = padding.top || 0,
       bottom = padding.bottom || 0,
       left = padding.left || 0,
       right = padding.right || 0;
@@ -73,7 +87,7 @@ class AiPageItem {
   }
 
   offset(axis) {
-    let offset = {
+    const offset = {
       y: this.obj.height - this.original.height,
       x: this.obj.width - this.original.width,
     };

@@ -2,8 +2,14 @@ import { getLayerSheetCC } from "../globals/globals";
 import { hexToRgb } from "../tools/tools";
 import { AiPageItem } from "./classPageItem";
 
+interface AiColorShapeOptions {
+  color?: string;
+}
+
 class AiColorShape extends AiPageItem {
-  constructor(item, value, options) {
+  obj: PathItem;
+
+  constructor(item: PathItem, value: string, options: AiColorShapeOptions) {
     super(item, options);
 
     let hex = value;
@@ -14,14 +20,14 @@ class AiColorShape extends AiPageItem {
     if (hex) this.setFillColor(hex);
   }
 
-  setFillColor(hex) {
-    let rgb = hexToRgb(hex);
+  setFillColor(hex: string) {
+    const rgb = hexToRgb(hex);
     if (rgb === null) {
       alert(`Error thrown while setting path color.
       '${hex}' must be formatted as a hex color to be used as a color value.`);
       return;
     }
-    let fill = new RGBColor();
+    const fill = new RGBColor();
 
     fill.red = rgb.r;
     fill.green = rgb.g;

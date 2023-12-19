@@ -12,7 +12,19 @@ function forceInclusions() {
   const doubleBoo = Object.create(boogle);
   $.write(doubleBoo.fish);
 
-  const object1 = {} as { property1: { value: number; writeable: boolean }; property2: string };
+  const object1 = {} as {
+    property1: { value: number; writeable: boolean };
+    property2: string;
+    betaProp: string;
+  };
+
+  Object.defineProperty(object1, "betaProp", {
+    enumerable: false,
+    configurable: false,
+    writable: false,
+    value: "static",
+  });
+
   Object.defineProperties(object1, {
     property1: {
       value: 42,

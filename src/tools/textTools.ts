@@ -1,4 +1,4 @@
-function deMoustache(original, lookup, bannedKeys) {
+function deMoustache(original: string, lookup: {[key: string]: string}, bannedKeys: string[] = []) {
   if (!lookup) return;
   const hasMoustaches = /{{[\s]*(\w+)[\s]*}}/gi;
   if (!hasMoustaches.test(original)) return original;

@@ -1,6 +1,6 @@
 import { active_document } from "../globals/document";
 import { loadSpreadsheetActions, removeSpreadsheetAction } from "../tools/actionTools";
-let layerHelper;
+let layerHelper: Layer | undefined;
 
 const prepare = () => {
   // If a layer is selected but not highlighted
@@ -12,20 +12,20 @@ const prepare = () => {
   // finally turning back on the original layer and
   // reselecting it. Thus rendering it both selected *and* highlighted
 
-  let layerOrigin = active_document.activeLayer;
+  const layerOrigin = active_document.activeLayer;
 
   layerHelper = active_document.layers.add();
   layerHelper.name = "SpreadsheetAi - Helper";
 
   layerOrigin.visible = false;
   active_document.activeLayer = layerHelper;
-  redraw();
+  app.redraw();
 
   layerOrigin.visible = true;
-  redraw();
+  app.redraw();
 
   active_document.activeLayer = layerOrigin;
-  redraw();
+  app.redraw();
 
   // There is a specific action that we
   // need to load to duplicate the layer

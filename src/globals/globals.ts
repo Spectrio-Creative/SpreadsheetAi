@@ -1,3 +1,4 @@
+import { SheetInfo } from "../classes/SheetInfo";
 import { camelCase } from "../tools/tools";
 
 let layer_sheet = {},
@@ -14,9 +15,13 @@ const getLayerSheetCC = () => {
 const setLayerSheet = (sheet) => {
   layer_sheet = sheet;
   layer_sheet_cc = {};
-  for (let key in layer_sheet) {
+  for (const key in layer_sheet) {
     layer_sheet_cc[camelCase(key)] = layer_sheet[key];
   }
 };
 
-export { getLayerSheet, setLayerSheet, getLayerSheetCC, layer_sheet };
+export const circleBack = [];
+
+export const sheetInfo = new SheetInfo();
+
+export { getLayerSheet, setLayerSheet, getLayerSheetCC, layer_sheet, layer_sheet_cc };

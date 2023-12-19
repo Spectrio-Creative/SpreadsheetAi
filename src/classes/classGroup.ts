@@ -8,6 +8,9 @@ import { stringToObj } from "../tools/tools";
 import { AiPageItem } from "./classPageItem";
 
 class AiGroupItem extends AiPageItem {
+  background: AiPageItem;
+  obj: GroupItem;
+
   constructor(item, options) {
     super(item, options);
     this.background = undefined;
@@ -15,9 +18,9 @@ class AiGroupItem extends AiPageItem {
     if (this.background) this.setBackgroundPadding();
   }
 
-  setPosition(x, y) {
+  setPosition(x?: number | string, y?: number | string) {
     if (!x && !y) {
-      let groupAlignment = getGroupAlignment(this.obj);
+      const groupAlignment = getGroupAlignment(this.obj);
 
       x = groupAlignment.x;
       y = groupAlignment.y;
@@ -27,9 +30,9 @@ class AiGroupItem extends AiPageItem {
       }
     }
     if (!y && isStringLocation(x)) {
-      let loc = parseLocation(x);
-      x = loc.x;
-      y = loc.y;
+      const location = parseLocation(x);
+      x = location.x;
+      y = location.y;
     }
 
     if (typeof x === "string") {
@@ -64,7 +67,7 @@ class AiGroupItem extends AiPageItem {
   }
 
   findBackground() {
-    let bg;
+    let bg: AiPageItem;
     this.obj.pageItems.forEach((item) => {
       const options = layer_options.test(item.name)
         ? stringToObj(item.name.match(layer_options)[1])
@@ -76,7 +79,7 @@ class AiGroupItem extends AiPageItem {
   }
 
   setBackgroundPadding() {
-    let prior = {
+    const prior = {
       top: this.obj.top,
       left: this.obj.left,
       width: this.obj.width,
@@ -85,7 +88,7 @@ class AiGroupItem extends AiPageItem {
 
     this.background.hide();
 
-    let padding = this.background.options.padding
+    const padding = this.background.options.padding
       ? this.background.options.padding
       : [
         -(this.obj.top - prior.top),
@@ -108,12 +111,12 @@ class AiGroupItem extends AiPageItem {
       width: this.obj.width,
       height: this.obj.height,
     };
-    let p = this.background.padding;
+    const padding = this.background.padding;
 
-    this.background.setPosition(actual.left - p[3], actual.top + p[0]);
+    this.background.setPosition(actual.left - padding[3], actual.top + padding[0]);
     this.background.setSize(
-      actual.width + (p[1] + p[3]),
-      actual.height + (p[0] + p[2])
+      actual.width + (padding[1] + padding[3]),
+      actual.height + (padding[0] + padding[2])
     );
   }
 }
