@@ -7,12 +7,14 @@ export function splitIntoLines(text: string) {
     if (character === "\n" && !inQuote) {
       out.push(line);
       line = "";
-    } else if (character === '"') {
+      continue;
+    } 
+    
+    if (character === '"') {
       if (inQuote) inQuote = false;
       else inQuote = true;
-    } else {
-      line += character;
     }
+    line += character;
   }
 
   return out;
@@ -20,7 +22,7 @@ export function splitIntoLines(text: string) {
 
 // Split csv text into an array of fields, note that two "" in a row is an escaped quote
 export function split(text: string, delimiter: string) {
-  text = text.replaceAll('\\"', '""');
+  // text = text.replaceAll('\\"', '""');
   const out = [];
   let field = "";
   let inQuote = false;
