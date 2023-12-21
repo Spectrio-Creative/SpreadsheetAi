@@ -1,7 +1,7 @@
-import { AiImage } from "../classes/classImage";
-import { AiTextBox } from "../classes/classTextBox";
-import { AiPageItem } from "../classes/classPageItem";
-import { AiGroupItem } from "../classes/classGroup";
+import { AiImage } from "../classes/AiImage";
+import { AiTextBox } from "../classes/AiTextBox";
+import { AiPageItem } from "../classes/AiPageItem";
+import { AiGroupItem } from "../classes/AiGroupItem";
 import {
   is_color,
   is_image,
@@ -10,7 +10,7 @@ import {
 } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
 import { layer_sheet } from "../globals/globals";
-import { AiColorShape } from "../classes/classColorShape";
+import { AiColorShape } from "../classes/AiColorShape";
 
 function fillLayer(item: PageItem) {
   const options = layer_options.test(item.name)

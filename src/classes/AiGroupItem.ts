@@ -5,7 +5,7 @@ import {
 } from "../tools/classTools";
 import { layer_options } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
-import { AiPageItem } from "./classPageItem";
+import { AiPageItem } from "./AiPageItem";
 
 class AiGroupItem extends AiPageItem {
   background: AiPageItem;

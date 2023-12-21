@@ -1,6 +1,6 @@
 import { getLayerSheetCC } from "../globals/globals";
 import { hexToRgb } from "../tools/tools";
-import { AiPageItem } from "./classPageItem";
+import { AiPageItem } from "./AiPageItem";
 
 interface AiColorShapeOptions {
   color?: string;
