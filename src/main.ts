@@ -20,10 +20,11 @@ const main = () => {
   alert(`SpreadsheetAi (v${scriptVersion})`);
 
   // @ts-ignore
-  alert(ElementPlacement.PLACEATBEGINNING);
+  // alert(ElementPlacement.PLACEATBEGINNING);
   prepare();
 
-  const myFile = File.openDialog("Please select CSV Spreadsheet.");
+  // const myFile = File.openDialog("Please select CSV Spreadsheet.", "*.csv", false);
+  const myFile = File.openDialog("Open CSV file", "Text: *.csv,All files: *.*", false);
   setUpStringMethods();
   setUpArrayMethods();
   extendExtendscript();
@@ -40,18 +41,14 @@ const main = () => {
           fileString += myFile.readln() + "\n";
         }
 
-        const fileObj = fromCSV({data: fileString, separator: ","}).toJSON() as SpreadsheetRow[];
+        const csvJSON = fromCSV({data: fileString, separator: ","}).toJSON() as SpreadsheetRow[];
+        const purged = JSON.parse(JSON.stringify(csvJSON));
 
-        fileObj.forEach((row, index) => {
-          alert(index + "\n" + JSON.stringify(row));
-        });
-
-        for (let i = 0; i < fileObj.length; i++) {
-          setLayerSheet(fileObj[i]);
+        for (let i = 0; i < purged.length; i++) {
+          setLayerSheet(purged[i]);
           createLayer(i);
         }
 
-        // createLayer.circleBack = createLayer.circleBack ? createLayer.circleBack : [];
         for (let i = 0; i < circleBack.length; i++) {
           setLayerSheet(circleBack[i]);
           createLayer(i);
