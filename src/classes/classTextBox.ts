@@ -70,7 +70,7 @@ class AiTextBox {
     return this.obj.textPath.width;
   }
 
-  offset(axis: "x" | "y") {
+  offset(axis?: "x" | "y") {
     const offset = {
       y: this.obj.textPath.height - this.original.height,
       x: this.obj.textPath.width - this.original.width,

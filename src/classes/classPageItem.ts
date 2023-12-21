@@ -86,7 +86,7 @@ class AiPageItem {
     this.padding = [top, right, bottom, left];
   }
 
-  offset(axis) {
+  offset(axis?: 'x' | 'y') {
     const offset = {
       y: this.obj.height - this.original.height,
       x: this.obj.width - this.original.width,

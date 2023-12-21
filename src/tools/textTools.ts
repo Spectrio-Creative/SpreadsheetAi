@@ -1,11 +1,16 @@
-function deMoustache(original: string, lookup: {[key: string]: string}, bannedKeys: string[] = []) {
+function deMoustache(
+  original: string,
+  lookup: { [key: string]: string },
+  bannedKeys: string[] = []
+): string {
   if (!lookup) return;
   const hasMoustaches = /{{[\s]*(\w+)[\s]*}}/gi;
   if (!hasMoustaches.test(original)) return original;
 
   let moustacheless = original;
   bannedKeys = bannedKeys || [];
-  if(!Array.isArray(bannedKeys)) alert("Banned Keys must be presented as an Array");
+  if (!Array.isArray(bannedKeys))
+    alert("Banned Keys must be presented as an Array");
 
   for (const key in lookup) {
     const moustache = new RegExp(

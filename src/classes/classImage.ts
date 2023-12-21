@@ -114,7 +114,7 @@ class AiImage {
     this.parent.clipped = val;
   }
 
-  offset(axis) {
+  offset(axis?: 'x' | 'y') {
     const offset = {
       y: 0, //(this.obj.textPath.height - this.original.height),
       x: 0, //(this.obj.textPath.width - this.original.width),

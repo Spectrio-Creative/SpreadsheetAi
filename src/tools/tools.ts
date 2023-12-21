@@ -1,4 +1,4 @@
-function clean(arr) {
+function clean(arr: string[]) {
   const newArr = [];
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] !== "" && arr[i] !== null && arr[i] !== undefined) {
@@ -82,14 +82,7 @@ function reduceGroup(groupItem, wLimit) {
   return difference;
 }
 
-function arrIncludes(arr, str) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === str) return true;
-  }
-  return false;
-}
-
-function loopBackwards(arr: unknown[], callback: (unknown) => unknown) {
+function loopBackwards(arr: unknown[], callback: (input: unknown) => unknown) {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (callback) {
       const command = callback(arr[i]);
@@ -98,7 +91,7 @@ function loopBackwards(arr: unknown[], callback: (unknown) => unknown) {
   }
 }
 
-function replaceMoustaches(item, key, value) {
+function replaceMoustaches(item: TextFrame, key: string, value: string) {
   const moustache = new RegExp(
     "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
     "i"
@@ -108,15 +101,15 @@ function replaceMoustaches(item, key, value) {
   }
 }
 
-function recursiveLayerLoop(layer, doThis) {
+function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
   doThis(layer);
   if (layer.layers)
-    loopBackwards(layer.layers, (next_layer) =>
-      recursiveLayerLoop(next_layer, doThis)
+    loopBackwards(layer.layers, (nextLayer: Layer) =>
+      recursiveLayerLoop(nextLayer, doThis)
     );
 }
 
-function stringToObj(str) {
+function stringToObj(str: string) {
   // insure that double quotes are used to make sure that
   // JSON.parse doesn't fail
   let jsonStr = str.replace(/'?(\w+)'? ?:/g, function (match, p1) {
@@ -165,7 +158,6 @@ export {
   priceCheck,
   reduceText,
   reduceGroup,
-  arrIncludes,
   loopBackwards,
   replaceMoustaches,
   recursiveLayerLoop,
