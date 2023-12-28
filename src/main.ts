@@ -6,13 +6,14 @@ $.write(aiVersion);
 import { setUpArrayMethods } from "./tools/extensions/arrayMethods";
 import { extendExtendscript } from "./tools/extensions/jsxMethods";
 import { createLayer } from "./plot_points/createLayer";
-import { circleBack, setLayerSheet } from "./globals/globals";
+import { setLayerSheet } from "./globals/globals";
 import { version as scriptVersion } from "../package.json";
 import { forceInclusions } from "./tools/forceInclusions";
 import { cleanUp, prepare } from "./plot_points/setup";
-import { fromCSV } from './tools/csv';
-import { setUpStringMethods } from './tools/extensions/string';
+import { fromCSV } from "./tools/csv";
+import { setUpStringMethods } from "./tools/extensions/string";
 import { document } from "./globals/document";
+import { templates } from "./globals/globals";
 
 const main = () => {
   // Things work better when we've deselected
@@ -24,37 +25,50 @@ const main = () => {
   // alert(ElementPlacement.PLACEATBEGINNING);
 
   // const myFile = File.openDialog("Please select CSV Spreadsheet.", "*.csv", false);
-  const myFile = File.openDialog("Open CSV file", "Text: *.csv,All files: *.*", false);
+  const csvFile = File.openDialog(
+    "Open CSV file",
+    "Text: *.csv,All files: *.*",
+    false
+  );
   setUpStringMethods();
   setUpArrayMethods();
   extendExtendscript();
   forceInclusions();
 
-  if (myFile != null) {
+  if (csvFile != null) {
     try {
       // open file
-      const fileOK = myFile.open("r");
+      const fileOK = csvFile.open("r");
       let fileString = "";
       if (fileOK) {
-        while (!myFile.eof) {
-          // read each line of text
-          fileString += myFile.readln() + "\n";
+        prepare();
+        while (!csvFile.eof) {
+          fileString += csvFile.readln() + "\n";
         }
 
-        const csvJSON = fromCSV({data: fileString, separator: ","}).toJSON() as SpreadsheetRow[];
+        const csvJSON = fromCSV({
+          data: fileString,
+          separator: ",",
+        }).toJSON() as SpreadsheetRow[];
         const purged = JSON.parse(JSON.stringify(csvJSON));
+        
+        // Save all pre-existing layers as templates
+        document.layers.forEach((layer) => {
+          templates.push(layer);
+        });
 
         for (let i = 0; i < purged.length; i++) {
           setLayerSheet(purged[i]);
           createLayer(i);
+          app.redraw();
         }
 
-        for (let i = 0; i < circleBack.length; i++) {
-          setLayerSheet(circleBack[i]);
-          createLayer(i);
-        }
-
-        myFile.close();
+        csvFile.close();
+        
+        // Remove template layers
+        templates.forEach((layer) => {
+          layer.remove();
+        });
       } else {
         alert("File open failed!");
       }

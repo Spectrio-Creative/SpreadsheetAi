@@ -16,44 +16,47 @@ function fillLayer(item: PageItem) {
   const options = layer_options.test(item.name)
     ? stringToObj(item.name.match(layer_options)[1])
     : {};
+    
   // If the item name is if found in the spreadsheet
+  let newValue: string | undefined;
+
   for (const key in layer_sheet) {
     if (!Object.prototype.hasOwnProperty.call(layer_sheet, key)) continue;
-    // alert(`key: ${key}\nkey type: ${typeof key}\nvalue: ${layer_sheet[key]}`);
+    
     const key_match = key_test(key);
-
     if (key_match.test(item.name)) {
-      const value = layer_sheet[key];
-      if (item.typename === "TextFrame") {
-        if (is_color.test(value)) continue;
-        const textBox = new AiTextBox(item as TextFrame, value, options);
-        textBox.replaceMoustaches(layer_sheet);
-        textBox.italicize();
-        textBox.resizeBox();
-        return textBox;
-      } else if (is_image.test(value)) {
-        const new_image = new AiImage(item, value, options);
-        if (!new_image.hasImage) return;
-        return new_image;
-      } else if (is_color.test(value)) {
-        const new_color = new AiColorShape(item as PathItem, value, options);
-        return new_color;
-      } else {
-        alert(item.typename);
-      }
+      newValue = layer_sheet[key];
+      break;
     }
   }
 
   // If the item is a textframe, it might have
   // moustaches to be replaced
-  if (item.typename === "TextFrame") {
-    const new_textbox = new AiTextBox(item as TextFrame, undefined, options);
+  if (item.typename === "TextFrame" && !is_color.test(newValue)) {
+    const new_textbox = new AiTextBox(item as TextFrame, newValue, options);
     const moustaches = new_textbox.replaceMoustaches(layer_sheet);
     new_textbox.italicize();
     // If data has changed, then we resize.
     if (moustaches) new_textbox.resizeBox();
     return new_textbox;
   }
+
+  if (newValue) {
+    if (is_image.test(newValue)) {
+      const new_image = new AiImage(item, newValue, options);
+      if (!new_image.hasImage) return;
+      return new_image;
+    } 
+    
+    if (is_color.test(newValue)) {
+      const new_color = new AiColorShape(item as PathItem, newValue, options);
+      return new_color;
+    } 
+    
+    // Missing type handler
+    alert(item.typename);
+  }
+
   
   // If PathItem, check for colors;
   if (item.typename === "PathItem" && options.color) {

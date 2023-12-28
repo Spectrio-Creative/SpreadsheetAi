@@ -1,8 +1,8 @@
 import { SheetInfo } from "../classes/SheetInfo";
 import { camelCase } from "../tools/tools";
 
-let layer_sheet = {},
-  layer_sheet_cc = {};
+let layer_sheet: { [key: string]: string } = {},
+  layer_sheet_cc: { [key: string]: string } = {};
 
 const getLayerSheet = () => {
   return layer_sheet;
@@ -20,7 +20,7 @@ const setLayerSheet = (sheet) => {
   }
 };
 
-export const circleBack = [];
+export const templates: Layer[] = [];
 
 export const sheetInfo = new SheetInfo();
 
