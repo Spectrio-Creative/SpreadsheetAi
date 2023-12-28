@@ -124,7 +124,11 @@ class AiImage {
     return offset;
   }
 
-  move(x, y) {
+  move(x: number, y: number) {
+    // Check for NaN
+    if (x !== x) x = 0;
+    if (y !== y) y = 0;
+
     this.obj.top -= y;
     this.model.top -= y;
 
