@@ -1,5 +1,6 @@
 import { getLayerSheetCC } from "../globals/globals";
 import { getFontFamily } from "../tools/classTools";
+import { littleId } from '../tools/littleId';
 import { deMoustache } from "../tools/textTools";
 import { hexToRgb } from "../tools/tools";
 
@@ -18,28 +19,13 @@ class AiTextBox {
     regular: TextFont;
     italic?: TextFont;
   };
+  id: string = littleId();
   
 
-  constructor(item: TextFrame, value, options) {
-    // Throw error if text box is not of type TextType.AREATEXT
-    if (String(item.kind) === "TextType.POINTTEXT") {
-      item.convertPointObjectToAreaObject();
-    }
-
-    if (String(item.kind) !== "TextType.AREATEXT") {
-      throw new Error(`Editable text boxes must be Area Text. Layer "${item.name}" is of type ${item.kind}.`);
-    }
+  constructor(item: TextFrame, value: string, options: AiTextBoxOptions) {
+    if (item.name === "") item.name = item.contents;
 
     this.obj = item;
-
-    // Set value if value is given
-    if (value) {
-      let sanatizedVal = value.replace(/""/g, "\"");
-      if (/^(['"]).*\1$/.test(sanatizedVal))
-        sanatizedVal = sanatizedVal.slice(1, -1);
-
-      this.setText(sanatizedVal);
-    }
 
     this.options = options;
     this.expandOptions();
@@ -48,13 +34,23 @@ class AiTextBox {
     this.getPosition();
     this.getFont();
     this.fonts = { regular: this.baseFont };
+
+    // Set value if value is given
+    if (value !== undefined) {
+      let sanatizedVal = `${value}`.replace(/""/g, "\"");
+      if (/^(['"]).*\1$/.test(sanatizedVal))
+        sanatizedVal = sanatizedVal.slice(1, -1);
+
+      this.setText(sanatizedVal);
+    }
+
     if (options.color) {
       const layer_sheet_cc = getLayerSheetCC();
       this.setColor(layer_sheet_cc[options.color]);
     }
   }
 
-  setText(value) {
+  setText(value: string) {
     this.obj.contents = value;
   }
 
@@ -72,8 +68,8 @@ class AiTextBox {
 
   offset(axis?: "x" | "y") {
     const offset = {
-      y: this.obj.textPath.height - this.original.height,
-      x: this.obj.textPath.width - this.original.width,
+      y: this.objHeight - this.original.height,
+      x: this.objWidth - this.original.width,
     };
 
     if (axis) return offset[axis];
@@ -89,10 +85,21 @@ class AiTextBox {
     this.obj.left -= x;
   }
 
-  getDimensions() {
+  get objHeight() {
+    if (this.obj.kind === TextType.POINTTEXT) return this.obj.height;
+    return this.obj.textPath.height;
+  }
+
+  get objWidth() {
+    if (this.obj.kind === TextType.POINTTEXT) return this.obj.width;
+    return this.obj.textPath.width;
+  }
+
+  getDimensions() {    
     try {
-      this.original.height = this.obj.textPath.height;
-      this.original.width = this.obj.textPath.width;
+      this.original.height = this.objHeight;
+      this.original.width = this.objWidth;
+
     } catch (error) {
       alert(`Error thrown while getting text dimensions.
       layer: ${this.obj.name}
@@ -110,8 +117,28 @@ class AiTextBox {
   }
 
   getFont() {
-    const textFont = this.obj.textRange.characterAttributes.textFont;
-    this.baseFont = textFont;
+    try {
+      const textRange = this.obj.textRange;
+      const characterAttributes = textRange.characterAttributes;
+      this.baseFont = characterAttributes.textFont;
+    } catch (error) {
+      // const textRanges = this.obj.textRanges;
+      
+      // alert(`TextRange: ${textRanges.length}`);
+
+      this.obj.locked = true;
+
+      alert(`Error thrown while getting text font.
+      layer: ${this.obj.name}
+      layer kind: ${this.obj.kind}
+      contents: ${this.obj.contents}
+      ${error.name}
+      ${error.message}
+      (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
+      throw error;
+    }
+    // const textFont = this.obj.textRange.characterAttributes.textFont;
+    // this.baseFont = textFont;
   }
 
   getFontAltertatives() {
@@ -214,6 +241,8 @@ class AiTextBox {
   }
 
   resizeBox(cancelFitting: boolean = false) {
+    this.convertToAreaText();
+
     const orHeight = this.obj.textPath.height;
     this.obj.textPath.height = 10000;
     const lineHeight = this.obj.textRange.characterAttributes.leading;
@@ -318,6 +347,30 @@ class AiTextBox {
     fill.blue = rgb.b;
 
     this.obj.textRange.characterAttributes.fillColor = fill;
+  }
+
+  convertToAreaText(): boolean {
+    if (this.obj.kind === TextType.AREATEXT) return true;
+
+    if (this.obj.kind === TextType.POINTTEXT) {
+      const name = this.obj.name;
+      this.obj.name = name + `_${this.id}`; // temporarily append id to name to avoid name conflicts
+      this.obj.convertPointObjectToAreaObject();
+      app.redraw();
+      
+      // reload item
+      this.obj = app.activeDocument.pageItems.getByName(name + `_${this.id}`) as TextFrame;
+      this.obj.name = name;
+      app.redraw();
+      
+      alert(`Layer "${this.obj.name}" was converted to Area Text.
+      If the text box is not the correct size, try converting it to Area Text in your template file and resizing the box appropriately.`);
+
+      return true;
+    }
+
+    // if (this.obj.kind === TextType.PATHTEXT) 
+    return false;
   }
 }
 
