@@ -7,13 +7,12 @@ import typescript from "@rollup/plugin-typescript";
 import stripComments from "./plugins/strip";
 
 export default {
-  input: "src/main.ts",
-  output: [
-    {
-      file: "build/SpreadsheetAi.jsx",
-      format: "esm",
-    },
-  ],
+  input: process.env.ENTRY || "src/main.ts",
+  output: {
+    file: process.env.OUTPUT || "build/SpreadsheetAi.jsx",
+    format: "esm",
+    sourcemap: false
+  },
   plugins: [
     typescript(),
     // eslint({throwOnError: true}),

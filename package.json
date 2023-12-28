@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs:build": "vuepress build docs",
     "docs:dev": "vuepress dev docs",
-    "build": "rollup --config && terser --compress --mangle -o ./build/SpreadsheetAi.min.jsx --ecma 3 -- ./build/SpreadsheetAi.jsx"
+    "build": "rollup --config && terser --compress --mangle -o ./build/SpreadsheetAi.min.jsx --ecma 3 -- ./build/SpreadsheetAi.jsx",
+    "playground": "ENTRY=src/playground.ts OUTPUT=./build/playground.jsx rollup --config"
   },
   "keywords": [],
   "author": "",
