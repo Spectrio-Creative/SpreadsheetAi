@@ -12,16 +12,16 @@ import { forceInclusions } from "./tools/forceInclusions";
 import { cleanUp, prepare } from "./plot_points/setup";
 import { fromCSV } from './tools/csv';
 import { setUpStringMethods } from './tools/extensions/string';
+import { document } from "./globals/document";
 
 const main = () => {
   // Things work better when we've deselected
-  // active_document.selection = null;
+  // document.selection = null;
 
   alert(`SpreadsheetAi (v${scriptVersion})`);
 
   // @ts-ignore
   // alert(ElementPlacement.PLACEATBEGINNING);
-  prepare();
 
   // const myFile = File.openDialog("Please select CSV Spreadsheet.", "*.csv", false);
   const myFile = File.openDialog("Open CSV file", "Text: *.csv,All files: *.*", false);

@@ -1,12 +1,11 @@
 import { recursiveLayerLoop } from "../tools/tools";
 import { findTemplate } from "../tools/templateTools";
 import { fillFromTemplate } from "./insertTemplateValues";
-import { active_document } from "../globals/document";
 import { circleBack, layer_sheet, layer_sheet_cc } from "../globals/globals";
 import { $setTimeout } from "../tools/extensions/jsxMethods";
+import { document } from "../globals/document";
 
 function createLayer(num: number) {
-  const project_layers = active_document.layers;
   // TODO: Add logic for variable template ref
   const template_title: string = layer_sheet_cc["template"] || layer_sheet_cc["layerTemplate"]; 
 
@@ -26,7 +25,7 @@ function createLayer(num: number) {
   }
 
   // Make the template active so we can copy it
-  active_document.activeLayer = template;
+  document.activeLayer = template;
 
   // Script is finished running when template's parent
   // has one more child.

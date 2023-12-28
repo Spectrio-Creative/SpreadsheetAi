@@ -1,14 +1,14 @@
-import { application_path } from "../globals/document";
+import { templatePath } from "../globals/document";
 // @ts-expect-error
 import sheetString from "../../actions/SpreadsheetAi.aia";
 
 function loadSpreadsheetActions() {
-  const f = new File(application_path + "/SpreadsheetAi_auto.aia");
-  f.open("w");
-  f.write(sheetString);
-  f.close();
-  app.loadAction(f); //LINE 75
-  f.remove();
+  const actionFile = new File(templatePath + "/SpreadsheetAi_auto.aia");
+  actionFile.open("w");
+  actionFile.write(sheetString);
+  actionFile.close();
+  app.loadAction(actionFile); //LINE 75
+  actionFile.remove();
 }
 
 function removeSpreadsheetAction() {

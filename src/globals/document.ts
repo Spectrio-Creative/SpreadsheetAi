@@ -1,4 +1,4 @@
-const active_document = app.activeDocument;
-const application_path = active_document.path;
 
-export { application_path, active_document };
+export const templateDocument = app.activeDocument;
+export const templatePath = templateDocument.path;
+export let document: Document;

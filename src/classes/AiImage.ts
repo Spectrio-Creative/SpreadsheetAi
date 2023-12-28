@@ -1,4 +1,4 @@
-import { active_document, application_path } from "../globals/document";
+import { document, templatePath } from "../globals/document";
 import { isStringLocation, parseLocation } from "../tools/classTools";
 
 interface AiImageOptions {
@@ -17,13 +17,13 @@ class AiImage {
   constructor(item: PageItem, url, options: AiImageOptions) {
     const file_urls = [
       url,
-      application_path + "/" + url,
-      application_path + "/links/" + url,
-      application_path + "/images/sorcerer/" + url,
+      templatePath + "/" + url,
+      templatePath + "/links/" + url,
+      templatePath + "/images/sorcerer/" + url,
     ];
 
     this.model = item;
-    active_document.selection = [item];
+    document.selection = [item];
     app.executeMenuCommand("group");
 
     this.obj = (item.parent as GroupItem).placedItems.add();
