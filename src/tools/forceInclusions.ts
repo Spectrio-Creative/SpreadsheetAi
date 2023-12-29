@@ -5,7 +5,7 @@
 // it forces the transpiler to define them, which then fixes
 // the root issue.
 
-function forceInclusions() {
+export function forceInclusions() {
   // class Y extends X requires both
   // Object.create and Object.defineProperties
   const boogle = { fish: "fingers" };
@@ -34,5 +34,3 @@ function forceInclusions() {
   });
   $.write(object1.property1);
 }
-
-export { forceInclusions };

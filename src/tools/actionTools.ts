@@ -2,7 +2,7 @@ import { templatePath } from "../globals/document";
 // @ts-expect-error
 import sheetString from "../../actions/SpreadsheetAi.aia";
 
-function loadSpreadsheetActions() {
+export function loadSpreadsheetActions() {
   const actionFile = new File(templatePath + "/SpreadsheetAi_auto.aia");
   actionFile.open("w");
   actionFile.write(sheetString);
@@ -11,8 +11,6 @@ function loadSpreadsheetActions() {
   actionFile.remove();
 }
 
-function removeSpreadsheetAction() {
+export function removeSpreadsheetAction() {
   app.unloadAction("SpreadsheetAi", "");
 }
-
-export { loadSpreadsheetActions, removeSpreadsheetAction };

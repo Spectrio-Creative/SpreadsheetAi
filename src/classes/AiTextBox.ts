@@ -4,12 +4,12 @@ import { littleId } from '../tools/littleId';
 import { deMoustache } from "../tools/textTools";
 import { hexToRgb } from "../tools/tools";
 
-interface AiTextBoxOptions {
+export interface AiTextBoxOptions {
   maxHeight?: number;
   color?: string;
 }
 
-class AiTextBox {
+export class AiTextBox {
   obj: TextFrame;
   options: AiTextBoxOptions;
   original: Box;
@@ -373,5 +373,3 @@ class AiTextBox {
     return false;
   }
 }
-
-export { AiTextBox };

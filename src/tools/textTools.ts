@@ -1,4 +1,4 @@
-function deMoustache(
+export function deMoustache(
   original: string,
   lookup: { [key: string]: string },
   bannedKeys: string[] = []
@@ -40,5 +40,3 @@ function deMoustache(
 
   return moustacheless;
 }
-
-export { deMoustache };

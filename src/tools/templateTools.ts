@@ -1,6 +1,6 @@
 import { templates } from '../globals/globals';
 
-function findTemplate(templateTitle: string): Layer | undefined {
+export function findTemplate(templateTitle: string): Layer | undefined {
   let template: Layer;
 
   const titleNoSpaces = templateTitle.replace(/\W+/g, '').toLowerCase();
@@ -12,5 +12,3 @@ function findTemplate(templateTitle: string): Layer | undefined {
 
   return template;
 }
-
-export { findTemplate };

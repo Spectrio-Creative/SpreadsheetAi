@@ -1,4 +1,4 @@
-function setUpArrayMethods() {
+export function setUpArrayMethods() {
   Array.prototype.indexOf = function (item) {
     for (let i = 0; i < this.length; i++) {
       if (this[i] === item) return i;
@@ -19,5 +19,3 @@ function setUpArrayMethods() {
     }
   };
 }
-
-export { setUpArrayMethods };

@@ -1,4 +1,4 @@
-function clean(arr: string[]) {
+export function clean(arr: string[]) {
   const newArr = [];
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] !== "" && arr[i] !== null && arr[i] !== undefined) {
@@ -8,7 +8,7 @@ function clean(arr: string[]) {
   return newArr;
 }
 
-function getTextContent(wordsObj) {
+export function getTextContent(wordsObj) {
   let fullString = "";
   for (let i = 0; i < wordsObj.length; i++) {
     if (i !== 0) fullString += " ";
@@ -17,7 +17,7 @@ function getTextContent(wordsObj) {
   return fullString;
 }
 
-function camelCase(str) {
+export function camelCase(str) {
   const camArr = str.match(/([a-z]+|[A-Z]\w+)/g);
   camArr[0] = camArr[0].toLowerCase();
   let newStr = "";
@@ -32,7 +32,7 @@ function camelCase(str) {
   return newStr;
 }
 
-function priceCheck(priceString) {
+export function priceCheck(priceString) {
   let priceType = "price (special)";
   //    if(/\$[0-9]*[\,]*[0-9]*[\.]*[0-9]* each/i.test(priceString)) priceType = "price ($each)";
   if (/buy [0-9]+ get [0-9]+/i.test(priceString)) {
@@ -47,7 +47,7 @@ function priceCheck(priceString) {
   return priceType;
 }
 
-function reduceText(textItem, rOption, overflow) {
+export function reduceText(textItem, rOption, overflow) {
   const orHeight = textItem.textPath.height;
   if (overflow) textItem.textPath.height = 10000;
   const lineHeight =
@@ -65,7 +65,7 @@ function reduceText(textItem, rOption, overflow) {
   return projectedH - orHeight;
 }
 
-function reduceGroup(groupItem, wLimit) {
+export function reduceGroup(groupItem, wLimit) {
   const originalWidth = groupItem.width;
   let difference = 0;
 
@@ -82,7 +82,7 @@ function reduceGroup(groupItem, wLimit) {
   return difference;
 }
 
-function loopBackwards(arr: unknown[], callback: (input: unknown) => unknown) {
+export function loopBackwards(arr: unknown[], callback: (input: unknown) => unknown) {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (callback) {
       const command = callback(arr[i]);
@@ -91,7 +91,7 @@ function loopBackwards(arr: unknown[], callback: (input: unknown) => unknown) {
   }
 }
 
-function replaceMoustaches(item: TextFrame, key: string, value: string) {
+export function replaceMoustaches(item: TextFrame, key: string, value: string) {
   const moustache = new RegExp(
     "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
     "i"
@@ -101,7 +101,7 @@ function replaceMoustaches(item: TextFrame, key: string, value: string) {
   }
 }
 
-function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
+export function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
   doThis(layer);
   if (layer.layers)
     loopBackwards(layer.layers, (nextLayer: Layer) =>
@@ -109,7 +109,7 @@ function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
     );
 }
 
-function stringToObj(str: string) {
+export function stringToObj(str: string) {
   // insure that double quotes are used to make sure that
   // JSON.parse doesn't fail
   let jsonStr = str.replace(/'?(\w+)'? ?:/g, function (match, p1) {
@@ -132,7 +132,7 @@ function stringToObj(str: string) {
   return JSON.parse(jsonStr);
 }
 
-function hexToRgb(hex: string) {
+export function hexToRgb(hex: string) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -143,26 +143,11 @@ function hexToRgb(hex: string) {
     : null;
 }
 
-function componentToHex(c) {
+export function componentToHex(c) {
   const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
 }
 
-function rgbToHex(r, g, b) {
+export function rgbToHex(r, g, b) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
-
-export {
-  clean,
-  getTextContent,
-  priceCheck,
-  reduceText,
-  reduceGroup,
-  loopBackwards,
-  replaceMoustaches,
-  recursiveLayerLoop,
-  stringToObj,
-  hexToRgb,
-  rgbToHex,
-  camelCase,
-};

@@ -1,13 +1,13 @@
 import { layer_options } from "./regExTests";
 import { stringToObj } from "./tools";
 
-const locationsAsSingleString = /^([\w.]+) ([\w.]+)/;
+export const locationsAsSingleString = /^([\w.]+) ([\w.]+)/;
 
-const isStringLocation = (location) => {
+export const isStringLocation = (location) => {
   return locationsAsSingleString.test(location);
 };
 
-const parseLocation = (location) => {
+export const parseLocation = (location) => {
   const stringVals = location.match(locationsAsSingleString),
     val1 = stringVals[1],
     val2 = stringVals[2];
@@ -28,7 +28,7 @@ const parseLocation = (location) => {
   }
 };
 
-const getGroupAlignment = (group: GroupItem) => {
+export const getGroupAlignment = (group: GroupItem) => {
   if (group.pageItems.length > 2) return { x: "center", y: "center" };
   let textAlignment = "center";
 
@@ -52,8 +52,6 @@ const getGroupAlignment = (group: GroupItem) => {
   return { x: groupAlignment, y: "center" };
 };
 
-const getFontFamily = (textFont) => {
+export const getFontFamily = (textFont) => {
   return app.textFonts.filter((tf) => tf.family === textFont.family);
 };
-
-export { isStringLocation, parseLocation, getGroupAlignment, getFontFamily };

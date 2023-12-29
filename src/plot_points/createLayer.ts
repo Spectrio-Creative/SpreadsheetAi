@@ -5,7 +5,7 @@ import { document } from "../globals/document";
 import { layer_sheet_cc } from "../globals/globals";
 import { duplicateLayer } from '../tools/duplicate';
 
-function createLayer(num: number) {
+export function createLayer(num: number) {
   // TODO: Add logic for variable template ref
   const templateTitle: string = layer_sheet_cc["template"] || layer_sheet_cc["layerTemplate"]; 
 
@@ -49,5 +49,3 @@ function createLayer(num: number) {
 
   // redraw();
 }
-
-export { createLayer };

@@ -2,11 +2,11 @@ import { getLayerSheetCC } from "../globals/globals";
 import { hexToRgb } from "../tools/tools";
 import { AiPageItem } from "./AiPageItem";
 
-interface AiColorShapeOptions {
+export interface AiColorShapeOptions {
   color?: string;
 }
 
-class AiColorShape extends AiPageItem {
+export class AiColorShape extends AiPageItem {
   obj: PathItem;
 
   constructor(item: PathItem, value: string, options: AiColorShapeOptions) {
@@ -36,5 +36,3 @@ class AiColorShape extends AiPageItem {
     this.obj.fillColor = fill;
   }
 }
-
-export { AiColorShape };

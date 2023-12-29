@@ -1,11 +1,11 @@
-interface AiPageItemOptions {
+export interface AiPageItemOptions {
   maxHeight?: number;
   color?: string;
   align?: string;
   padding?: [number, number, number, number];
 }
 
-class AiPageItem {
+export class AiPageItem {
   obj: PageItem;
   original: Box;
   stored: Box;
@@ -143,5 +143,3 @@ class AiPageItem {
     this.obj.left = this.stored.left;
   }
 }
-
-export { AiPageItem };

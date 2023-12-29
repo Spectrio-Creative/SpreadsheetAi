@@ -7,7 +7,7 @@ import { layer_options } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
 import { AiPageItem } from "./AiPageItem";
 
-class AiGroupItem extends AiPageItem {
+export class AiGroupItem extends AiPageItem {
   background: AiPageItem;
   obj: GroupItem;
 
@@ -120,5 +120,3 @@ class AiGroupItem extends AiPageItem {
     );
   }
 }
-
-export { AiGroupItem };

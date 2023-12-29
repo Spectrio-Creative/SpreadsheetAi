@@ -1,9 +1,7 @@
 import { createDocument } from "../globals/document";
 
-const prepare = () => {
+export const prepare = () => {
   createDocument();
 };
 
-const cleanUp = () => {};
-
-export { prepare, cleanUp };
+export const cleanUp = () => {};

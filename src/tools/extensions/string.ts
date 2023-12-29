@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-function setUpStringMethods() {
+export function setUpStringMethods() {
   String.prototype.replaceAll = function (searchvalue, newvalue) {
     searchvalue = searchvalue instanceof RegExp ? searchvalue : new RegExp(searchvalue, "g");
     return this.replace(searchvalue, newvalue);
@@ -76,5 +76,3 @@ function setUpStringMethods() {
     };
   }
 }
-
-export { setUpStringMethods };

@@ -108,7 +108,7 @@ export function fromCSV({
   }
 }
 
-function toMarkdown(data: { [key: string]: string }[]) {
+export function toMarkdown(data: { [key: string]: string }[]) {
   const headers = Object.keys(data[0]);
   const out = [];
   out.push(headers.join("|"));

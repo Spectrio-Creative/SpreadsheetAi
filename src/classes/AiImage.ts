@@ -1,12 +1,12 @@
 import { document, templatePath } from "../globals/document";
 import { isStringLocation, parseLocation } from "../tools/classTools";
 
-interface AiImageOptions {
+export interface AiImageOptions {
   size?: string;
   location?: string;
 }
 
-class AiImage {
+export class AiImage {
   obj: PlacedItem;
   hasImage: boolean;
   options: AiImageOptions;
@@ -174,5 +174,3 @@ class AiImage {
     this.obj.left = x;
   }
 }
-
-export { AiImage };

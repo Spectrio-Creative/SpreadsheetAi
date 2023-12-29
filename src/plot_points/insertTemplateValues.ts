@@ -12,7 +12,7 @@ import { stringToObj } from "../tools/tools";
 import { layer_sheet } from "../globals/globals";
 import { AiColorShape } from "../classes/AiColorShape";
 
-function fillLayer(item: PageItem) {
+export function fillLayer(item: PageItem) {
   const options = layer_options.test(item.name)
     ? stringToObj(item.name.match(layer_options)[1])
     : {};
@@ -67,7 +67,7 @@ function fillLayer(item: PageItem) {
   return new AiPageItem(item, options);
 }
 
-function fillFromTemplate(layer, options: string[] = []) {
+export function fillFromTemplate(layer, options: string[] = []) {
   const offset = { x: 0, y: 0 };
   layer.pageItems.forEach((item: PageItem) => {
     let currentItem: AiGroupItem | AiPageItem | AiTextBox | AiImage;
@@ -97,5 +97,3 @@ function fillFromTemplate(layer, options: string[] = []) {
     }
   });
 }
-
-export { fillFromTemplate };
