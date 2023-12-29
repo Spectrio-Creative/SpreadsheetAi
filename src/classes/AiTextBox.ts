@@ -1,7 +1,7 @@
 import { getLayerSheetCC } from "../globals/globals";
 import { getFontFamily } from "../tools/classTools";
 import { littleId } from '../tools/littleId';
-import { deMoustache } from "../tools/textTools";
+import { deMoustache } from "../tools/text";
 import { hexToRgb } from "../tools/tools";
 
 export interface AiTextBoxOptions {
