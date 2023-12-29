@@ -2,7 +2,7 @@ import {
   getGroupAlignment,
   isStringLocation,
   parseLocation,
-} from "../tools/classTools";
+} from "../tools/classes";
 import { layer_options } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
 import { AiPageItem } from "./AiPageItem";

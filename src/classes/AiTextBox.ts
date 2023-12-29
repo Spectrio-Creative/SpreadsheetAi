@@ -1,5 +1,5 @@
 import { getLayerSheetCC } from "../globals/globals";
-import { getFontFamily } from "../tools/classTools";
+import { getFontFamily } from "../tools/classes";
 import { littleId } from '../tools/littleId';
 import { deMoustache } from "../tools/text";
 import { hexToRgb } from "../tools/tools";

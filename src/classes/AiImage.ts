@@ -1,5 +1,5 @@
 import { document, templatePath } from "../globals/document";
-import { isStringLocation, parseLocation } from "../tools/classTools";
+import { isStringLocation, parseLocation } from "../tools/classes";
 
 export interface AiImageOptions {
   size?: string;
