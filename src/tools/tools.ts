@@ -1,16 +1,7 @@
+export type PriceType = "price (special)" | "price (getxfree)" | "price (xfor$)" | "price ($each)";
 
-export function getTextContent(wordsObj) {
-  let fullString = "";
-  for (let i = 0; i < wordsObj.length; i++) {
-    if (i !== 0) fullString += " ";
-    fullString += wordsObj[i].contents;
-  }
-  return fullString;
-}
-
-
-export function priceCheck(priceString) {
-  let priceType = "price (special)";
+export function priceCheck(priceString: string) {
+  let priceType: PriceType = "price (special)";
   //    if(/\$[0-9]*[\,]*[0-9]*[\.]*[0-9]* each/i.test(priceString)) priceType = "price ($each)";
   if (/buy [0-9]+ get [0-9]+/i.test(priceString)) {
     priceType = "price (getxfree)";
@@ -22,35 +13,6 @@ export function priceCheck(priceString) {
     priceType = "price (special)";
   }
   return priceType;
-}
-
-
-export function reduceGroup(groupItem, wLimit) {
-  const originalWidth = groupItem.width;
-  let difference = 0;
-
-  groupItem.resize(
-    (100 * wLimit) / originalWidth,
-    (100 * wLimit) / originalWidth
-  );
-  difference = originalWidth - groupItem.width;
-
-  groupItem.position = [
-    groupItem.position[0] - difference / 2,
-    groupItem.position[1],
-  ];
-  return difference;
-}
-
-
-export function replaceMoustaches(item: TextFrame, key: string, value: string) {
-  const moustache = new RegExp(
-    "{{[\\s]*" + key.replace(" ", "[\\s]{0,1}") + "[\\s]*}}",
-    "i"
-  );
-  if (moustache.test(item.contents)) {
-    item.contents = item.contents.replace(moustache, value);
-  }
 }
 
 export function stringToObj(str: string) {
@@ -76,3 +38,6 @@ export function stringToObj(str: string) {
   return JSON.parse(jsonStr);
 }
 
+export const oppositeDimension = (dim: dimension) => {
+  return dim === "width" ? "height" : "width";
+};
