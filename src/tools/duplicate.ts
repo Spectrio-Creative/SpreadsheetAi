@@ -1,5 +1,4 @@
-import { last } from "./arrays";
-import { loopBackwards } from "./tools";
+import { last, loopBackwards } from "./arrays";
 
 interface ArtboardInfo {
   name: string;
@@ -72,8 +71,6 @@ export function duplicateLayer(layer: Layer, document: Document | Layer) {
     pageItems.push(newPageItem);
   });
 
-  //   alert(`Z Orders:\n${zOrderItems.join(", ")}\n${zOrderLayers.join(", ")}`);
-
   for (let i = zOrderItems.length; i >= 0; i--) {
     const next = zOrderItems[i] || Number.POSITIVE_INFINITY;
     const previous = zOrderItems[i - 1] || Number.NEGATIVE_INFINITY;
@@ -86,8 +83,6 @@ export function duplicateLayer(layer: Layer, document: Document | Layer) {
       const previousItem = pageItems[i - 1];
       const nextItem = pageItems[i];
 
-      //   alert(`${layer.name}:\nOrder: ${previous}, ${order}, ${next}\nIndex: ${index}`);
-
       if (previousItem) {
         // @ts-ignore
         layer.move(previousItem, ElementPlacement.PLACEBEFORE);
@@ -97,8 +92,6 @@ export function duplicateLayer(layer: Layer, document: Document | Layer) {
       }
     }
   }
-
-  //   alert(`Z Orders:\n${zOrderItems.join(", ")}\n${zOrderLayers.join(", ")}`);
 
   newLayer.visible = layer.visible;
   newLayer.locked = layer.locked;

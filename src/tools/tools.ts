@@ -1,12 +1,3 @@
-export function clean(arr: string[]) {
-  const newArr = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== "" && arr[i] !== null && arr[i] !== undefined) {
-      newArr.push(arr[i]);
-    }
-  }
-  return newArr;
-}
 
 export function getTextContent(wordsObj) {
   let fullString = "";
@@ -17,20 +8,6 @@ export function getTextContent(wordsObj) {
   return fullString;
 }
 
-export function camelCase(str) {
-  const camArr = str.match(/([a-z]+|[A-Z]\w+)/g);
-  camArr[0] = camArr[0].toLowerCase();
-  let newStr = "";
-  camArr.forEach((v, i) => {
-    if (i === 0) {
-      newStr += v;
-      return;
-    }
-    newStr += v[0].toUpperCase() + v.substring(1);
-  });
-
-  return newStr;
-}
 
 export function priceCheck(priceString) {
   let priceType = "price (special)";
@@ -65,14 +42,6 @@ export function reduceGroup(groupItem, wLimit) {
   return difference;
 }
 
-export function loopBackwards(arr: unknown[], callback: (input: unknown) => unknown) {
-  for (let i = arr.length - 1; i >= 0; i--) {
-    if (callback) {
-      const command = callback(arr[i]);
-      if (command === "stop") return;
-    }
-  }
-}
 
 export function replaceMoustaches(item: TextFrame, key: string, value: string) {
   const moustache = new RegExp(
