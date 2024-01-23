@@ -53,14 +53,6 @@ export function replaceMoustaches(item: TextFrame, key: string, value: string) {
   }
 }
 
-export function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
-  doThis(layer);
-  if (layer.layers)
-    loopBackwards(layer.layers, (nextLayer: Layer) =>
-      recursiveLayerLoop(nextLayer, doThis)
-    );
-}
-
 export function stringToObj(str: string) {
   // insure that double quotes are used to make sure that
   // JSON.parse doesn't fail
