@@ -2648,6 +2648,11 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+just-camel-case@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/just-camel-case/-/just-camel-case-6.2.0.tgz#c08a7079f3ae010d25c8d258bb6db1f3f387c225"
+  integrity sha512-ICenRLXwkQYLk3UyvLQZ+uKuwFVJ3JHFYFn7F2782G2Mv2hW8WPePqgdhpnjGaqkYtSVWnyCESZhGXUmY3/bEg==
+
 just-clone@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/just-clone/-/just-clone-6.2.0.tgz#a4614d9bf7e4bbdcae7f9ba904aea5ea9cae8ae5"
