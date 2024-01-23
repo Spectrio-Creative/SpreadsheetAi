@@ -1,0 +1,1 @@
+export const playgroundCounter: { [key: string]: number } = {};
