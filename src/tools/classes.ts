@@ -3,16 +3,16 @@ import { stringToObj } from "./tools";
 
 export const locationsAsSingleString = /^([\w.]+) ([\w.]+)/;
 
-export const isStringLocation = (location) => {
+export const isStringLocation = (location: string) => {
   return locationsAsSingleString.test(location);
 };
 
-export const parseLocation = (location) => {
+export const parseLocation = (location: string) => {
   const stringVals = location.match(locationsAsSingleString),
     val1 = stringVals[1],
     val2 = stringVals[2];
 
-  let x, y;
+  let x: string, y: string;
 
   if (/top|bottom|center/.test(val1) && !/top|bottom/.test(val2)) y = val1;
   if (/left|right|center/.test(val1) && !/left|right/.test(val2)) x = val1;
@@ -23,9 +23,9 @@ export const parseLocation = (location) => {
 
   if (isNaN(parseFloat(val1)) || isNaN(parseFloat(val2))) {
     return { x: "center", y: "center" };
-  } else {
-    return { x: parseFloat(val1), y: parseFloat(val2) };
   }
+  
+  return { x: parseFloat(val1), y: parseFloat(val2) };
 };
 
 export const getGroupAlignment = (group: GroupItem) => {
