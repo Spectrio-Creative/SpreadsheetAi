@@ -24,7 +24,7 @@ export function fillLayer(item: PageItem) {
     if (!Object.prototype.hasOwnProperty.call(layer_sheet, key)) continue;
     
     const key_match = key_test(key);
-    if (key_match.test(item.name)) {
+    if (item.name !== "" && key_match.test(item.name)) {
       newValue = layer_sheet[key];
       break;
     }
@@ -54,7 +54,7 @@ export function fillLayer(item: PageItem) {
     } 
     
     // Missing type handler
-    alert(item.typename);
+    alert(`Missing type handler for: ${item.typename}`);
   }
 
   
@@ -67,7 +67,7 @@ export function fillLayer(item: PageItem) {
   return new AiPageItem(item, options);
 }
 
-export function fillFromTemplate(layer, options: string[] = []) {
+export function fillFromTemplate(layer: Layer | GroupItem, options: string[] = []) {
   const offset = { x: 0, y: 0 };
   layer.pageItems.forEach((item: PageItem) => {
     let currentItem: AiGroupItem | AiPageItem | AiTextBox | AiImage;
@@ -77,7 +77,7 @@ export function fillFromTemplate(layer, options: string[] = []) {
         : {};
 
       const group = new AiGroupItem(item, options);
-      fillFromTemplate(item, ["offset"]);
+      fillFromTemplate(item as GroupItem, ["offset"]);
       group.setBackground();
       group.setPosition();
 
