@@ -1,20 +1,33 @@
 import { document, templatePath } from "../globals/document";
 import { isStringLocation, parseLocation } from "../tools/classes";
+import { oppositeDimension } from '../tools/tools';
+import { AiPageItem, AiPageItemOptions } from './AiPageItem';
 
-export interface AiImageOptions {
-  size?: string;
+export type SizeOption = "contain" | "cover" | "original";
+
+export type Alignment = "left" | "right" | "center" | "top" | "bottom";
+
+export type DoubleAlignment = "left top" | "left center" | "left bottom" | "right top" | "right center" | "right bottom" | "center top" | "center center" | "center bottom";
+
+export interface AiImageOptions extends AiPageItemOptions {
+  size?: SizeOption;
   location?: string;
+  align?: Alignment | DoubleAlignment;
 }
 
-export class AiImage {
+export class AiImage extends AiPageItem {
+  uuid: string;
   obj: PlacedItem;
   hasImage: boolean;
   options: AiImageOptions;
   original: Box;
   parent: GroupItem;
   model: PageItem;
+  clipped: boolean;
 
   constructor(item: PageItem, url, options: AiImageOptions) {
+    super(item, options);
+
     const file_urls = [
       url,
       templatePath + "/" + url,
@@ -38,7 +51,7 @@ export class AiImage {
     }
 
     if (this.hasImage) {
-      this.options.size ? this.setSize(this.options.size) : this.setSize();
+      this.options.size ? this.setImageSize(this.options.size) : this.setImageSize();
       this.options.location
         ? this.setLocation(this.options.location)
         : this.setLocation("center");
@@ -55,7 +68,7 @@ export class AiImage {
     try {
       this.obj.file = file;
       this.hasImage = true;
-      this.getDimensions();
+      this.resetOriginalDimensions();
       if (callback) callback();
     } catch (e) {
       if (onFail) onFail(e);
@@ -63,55 +76,38 @@ export class AiImage {
   }
 
   height() {
+    if (this.clipped) return this.parent.height;
     return this.obj.height;
   }
 
   width() {
+    if (this.clipped) return this.parent.width;
     return this.obj.width;
   }
 
-  getDimensions() {
-    this.original.height = this.height();
-    this.original.width = this.width();
-    this.original.ratio = this.width() / this.height();
-  }
+  setImageSize(option: SizeOption = 'contain') {
 
-  setSize(option?: string) {
-    const modelRatio = this.model.width / this.model.height;
-    option = option ? option : "contain";
-
-    const keyDim = this.original.ratio > modelRatio ? "width" : "height";
-    const keyIsWidth = keyDim === "width";
-    const secondDim = keyIsWidth ? "height" : "width";
-
-    switch (option) {
-    case "contain":
-      this.obj[keyDim] = this.model[keyDim];
-      this.obj[secondDim] = keyIsWidth
-        ? this.obj[keyDim] / this.original.ratio
-        : this.obj[keyDim] * this.original.ratio;
-      break;
-
-    case "cover":
-      this.obj[secondDim] = this.model[secondDim];
-      this.obj[keyDim] = keyIsWidth
-        ? this.obj[secondDim] * this.original.ratio
-        : this.obj[secondDim] / this.original.ratio;
-      break;
-
-    case "original":
-      this.obj[keyDim] = this.original[keyDim];
-      this.obj[secondDim] = this.original[secondDim];
-      break;
-
-    default:
-      break;
+    if(option === "original") {
+      this.obj.height = this.original.height;
+      this.obj.width = this.original.width;
+      return;
     }
+
+    const modelRatio = this.model.width / this.model.height;
+    let keyDimension: dimension = this.original.ratio > modelRatio ? "width" : "height";
+
+    if (option === "cover") keyDimension = oppositeDimension(keyDimension);
+
+    this.obj[keyDimension] = this.model[keyDimension];
+    this.obj[oppositeDimension(keyDimension)] = keyDimension === "width"
+      ? this.obj[keyDimension] / this.original.ratio
+      : this.obj[keyDimension] * this.original.ratio;
   }
 
   toggleClip(force?: boolean) {
     const val = typeof force === "boolean" ? force : !this.parent.clipped;
     this.parent.clipped = val;
+    this.clipped = val;
   }
 
   offset(axis?: 'x' | 'y') {
@@ -137,8 +133,8 @@ export class AiImage {
   }
 
   setLocation(x?: number | string, y?: number | string) {
-    if (!y && isStringLocation(x)) {
-      const location = parseLocation(x);
+    if (!y && isStringLocation(`${x}`)) {
+      const location = parseLocation(`${x}`);
       x = location.x;
       y = location.y;
     }

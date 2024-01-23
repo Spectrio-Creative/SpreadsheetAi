@@ -6,20 +6,34 @@ export interface AiPageItemOptions {
 }
 
 export class AiPageItem {
+  uuid: string;
   obj: PageItem;
   original: Box;
   stored: Box;
   options: AiPageItemOptions;
   padding: number[];
+  name: string;
+  typename: string;
 
   constructor(item: PageItem, options: AiPageItemOptions) {
     this.obj = item;
-    this.original = { height: 0, width: 0, ratio: 1 };
+    this.original = { height: 0, width: 0, ratio: 1, top: 0, left: 0 };
     this.stored = { height: 0, width: 0, top: 0, left: 0 };
     this.options = options;
-    this.getDimensions();
-    this.getPosition();
+    this.resetOriginalDimensions();
+    this.resetOriginalPosition();
     this.padding = [0, 0, 0, 0];
+
+    this.name = item.name;
+    this.typename = "Ai" + item.typename;
+  }
+
+  top() {
+    return this.obj.top;
+  }
+
+  left() {
+    return this.obj.left;
   }
 
   height() {
@@ -34,17 +48,17 @@ export class AiPageItem {
     return this.obj.typename;
   }
 
-  setHeight(height) {
+  setHeight(height: number) {
     this.obj.height = height;
     return height;
   }
 
-  setWidth(width) {
+  setWidth(width: number) {
     this.obj.width = width;
     return width;
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number) {
     this.setHeight(height);
     this.setWidth(width);
     return [width, height];
@@ -86,10 +100,10 @@ export class AiPageItem {
     this.padding = [top, right, bottom, left];
   }
 
-  offset(axis?: 'x' | 'y') {
+  offset(axis?: "x" | "y") {
     const offset = {
-      y: this.obj.height - this.original.height,
-      x: this.obj.width - this.original.width,
+      y: this.height() - this.original.height,
+      x: this.width() - this.original.width,
     };
 
     if (axis) return offset[axis];
@@ -118,13 +132,24 @@ export class AiPageItem {
     this.obj.width -= x;
   }
 
-  getDimensions() {
-    this.original.height = this.obj.height;
-    this.original.width = this.obj.width;
-    this.original.ratio = this.obj.width / this.obj.height;
+  resetOriginalDimensions() {
+    try {
+      this.original.height = this.height();
+      this.original.width = this.width();
+      this.original.ratio = this.original.width / this.original.height;
+
+    } catch (error) {
+      alert(`Error thrown while getting text dimensions.
+      layer: ${this.obj.name}
+      layer kind: ${(this.obj as TextFrame)?.kind}
+      ${error.name}
+      ${error.message}
+      (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
+      throw error;
+    }
   }
 
-  getPosition() {
+  resetOriginalPosition() {
     this.original.top = this.obj.top;
     this.original.left = this.obj.left;
   }

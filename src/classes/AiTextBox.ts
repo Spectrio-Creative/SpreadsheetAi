@@ -1,15 +1,17 @@
 import { getLayerSheetCC } from "../globals/globals";
 import { getFontFamily } from "../tools/classes";
+import { hexToRgb } from '../tools/colors';
 import { littleId } from '../tools/littleId';
 import { deMoustache } from "../tools/text";
-import { hexToRgb } from "../tools/tools";
+import { AiPageItem, AiPageItemOptions } from './AiPageItem';
 
-export interface AiTextBoxOptions {
+export interface AiTextBoxOptions extends AiPageItemOptions {
   maxHeight?: number;
   color?: string;
 }
 
-export class AiTextBox {
+export class AiTextBox extends AiPageItem {
+  uuid: string;
   obj: TextFrame;
   options: AiTextBoxOptions;
   original: Box;
@@ -22,21 +24,19 @@ export class AiTextBox {
   id: string = littleId();
   
 
-  constructor(item: TextFrame, value: string, options: AiTextBoxOptions) {
+  constructor(item: TextFrame, value?: string, options?: AiTextBoxOptions) {
+    super(item, options);
     if (item.name === "") item.name = item.contents;
 
     this.obj = item;
 
     this.options = options;
-    this.expandOptions();
-    this.original = { height: 0, width: 0 };
-    this.getDimensions();
-    this.getPosition();
+    this.maxHeightInPixels = this.calculateMaxHeightInPixels();
     this.getFont();
     this.fonts = { regular: this.baseFont };
 
     // Set value if value is given
-    if (value !== undefined) {
+    if (typeof value !== "undefined" && value !== null) {
       let sanatizedVal = `${value}`.replace(/""/g, "\"");
       if (/^(['"]).*\1$/.test(sanatizedVal))
         sanatizedVal = sanatizedVal.slice(1, -1);
@@ -51,6 +51,7 @@ export class AiTextBox {
   }
 
   setText(value: string) {
+    if (typeof value !== "string") value = `${value}`;
     this.obj.contents = value;
   }
 
@@ -59,61 +60,21 @@ export class AiTextBox {
   }
 
   height() {
-    return this.obj.textPath.height;
+    if (this.obj.kind === TextType.POINTTEXT) return this.obj.height;
+    return this.pathHeight();
   }
 
   width() {
-    return this.obj.textPath.width;
+    if (this.obj.kind === TextType.POINTTEXT) return this.obj.width;
+    return this.pathWidth();
   }
 
-  offset(axis?: "x" | "y") {
-    const offset = {
-      y: this.objHeight - this.original.height,
-      x: this.objWidth - this.original.width,
-    };
-
-    if (axis) return offset[axis];
-    return offset;
-  }
-
-  move(x: number, y: number) {
-    // Check for NaN
-    if (x !== x) x = 0;
-    if (y !== y) y = 0;
-
-    this.obj.top -= y;
-    this.obj.left -= x;
-  }
-
-  get objHeight() {
-    if (this.obj.kind === TextType.POINTTEXT) return this.obj.height;
+  pathHeight() {
     return this.obj.textPath.height;
   }
 
-  get objWidth() {
-    if (this.obj.kind === TextType.POINTTEXT) return this.obj.width;
+  pathWidth() {
     return this.obj.textPath.width;
-  }
-
-  getDimensions() {    
-    try {
-      this.original.height = this.objHeight;
-      this.original.width = this.objWidth;
-
-    } catch (error) {
-      alert(`Error thrown while getting text dimensions.
-      layer: ${this.obj.name}
-      layer: ${this.obj.kind}
-      ${error.name}
-      ${error.message}
-      (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
-      throw error;
-    }
-  }
-
-  getPosition() {
-    this.original.top = this.obj.top;
-    this.original.left = this.obj.left;
   }
 
   getFont() {
@@ -195,42 +156,34 @@ export class AiTextBox {
     }
   }
 
-  expandOptions() {
-    this.maxHeightInPixels = Number.POSITIVE_INFINITY;
-    if (this.options) {
-      if (this.options.maxHeight) {
-        const lineHeight =
-        // @ts-ignore
-          (this.obj.paragraphs[0].autoLeadingAmount *
-            this.obj.textRange.characterAttributes.size) /
-          100;
+  calculateMaxHeightInPixels(): number {
+    if (!this.options || !this.options.maxHeight) return Number.POSITIVE_INFINITY;
+    const leading = this.obj.textRange.characterAttributes.leading;
+    return this.options.maxHeight * leading;
+  }
 
-        this.maxHeightInPixels = this.options.maxHeight * lineHeight;
-      }
-    }
+  charactersVisible() {
+    return this.obj.lines.reduce((total, line) => {
+      return total + line.characters.length;
+    }, 0);
   }
 
   overset() {
     const textBox = this.obj;
-    const calculateVisible = (lines) => {
-      let total = 0;
-      for (let i = 0; i < lines.length; i++) {
-        total += lines[0].characters.length;
-      }
-      return total;
-    };
 
-    if (textBox.lines.length > 0) {
-      const visibleLines = calculateVisible(textBox.lines);
-      // alert(`${visibleLines} > ${textBox.characters.length}`);
-      if (visibleLines < textBox.characters.length) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (textBox.characters.length > 0) {
+    if (textBox.lines.length === 0 && textBox.characters.length === 0) {
+      return false;
+    }
+
+    if (textBox.lines.length === 0 && textBox.characters.length > 0) {
       return true;
     }
+
+    if (this.charactersVisible() < textBox.characters.length) {
+      return true;
+    }
+    
+    return false; 
   }
 
   fitToBox() {
