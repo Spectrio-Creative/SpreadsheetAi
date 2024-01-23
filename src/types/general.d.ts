@@ -10,3 +10,5 @@ interface SpreadsheetRow extends BasicObject {
     "Template": string;
     "Layer Name": string;
 }
+
+type dimension = 'width' | 'height';
