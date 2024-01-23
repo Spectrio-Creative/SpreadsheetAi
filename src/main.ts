@@ -55,6 +55,11 @@ const main = () => {
         // Save all pre-existing layers as templates
         document.layers.forEach((layer) => {
           templates.push(layer);
+          if (/templates/i.test(layer.name)) {
+            layer.layers.forEach((subLayer) => {
+              templates.push(subLayer);
+            });
+          }
         });
 
         for (let i = 0; i < purged.length; i++) {
