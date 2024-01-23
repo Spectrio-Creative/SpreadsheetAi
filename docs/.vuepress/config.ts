@@ -23,7 +23,7 @@ module.exports = {
         {
           text: "Docs", // required
           // link: "/docs/", // optional
-          children: ["/docs/README.md", "/docs/text/README.md"],
+          children: ["/docs/README.md", "/docs/text/README.md", "/docs/images/README.md"],
         },
         {
           text: "Downloads",
