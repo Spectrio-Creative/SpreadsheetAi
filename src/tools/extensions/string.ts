@@ -2,7 +2,6 @@ declare global {
   interface String {
     matchFirst: (match:string|RegExp) => string;
     trimmer: () => string;
-    camelCase: () => string;
   }
 }
 
@@ -67,12 +66,6 @@ export function setUpStringMethods() {
   if (!String.prototype.trimmer) {
     String.prototype.trimmer = function () {
       return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
-    };
-  }
-
-  if (!String.prototype.camelCase) {
-    String.prototype.camelCase = function () {
-      return this.replace(/-([a-z])/g, function (g: string) { return g[1].toUpperCase(); });
     };
   }
 }

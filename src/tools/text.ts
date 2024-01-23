@@ -40,3 +40,19 @@ export function deMoustache(
 
   return moustacheless;
 }
+
+export function camelCase(str: string) {
+  const words = str.match(/([a-z]+|[A-Z]\w+)/g);
+  if (!words) return str;
+  words[0] = words[0].toLowerCase();
+  let camelString = "";
+  words.forEach((word, index) => {
+    if (index === 0) {
+      camelString += word;
+      return;
+    }
+    camelString += word[0].toUpperCase() + word.substring(1);
+  });
+
+  return camelString;
+}
