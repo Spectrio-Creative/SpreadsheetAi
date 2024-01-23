@@ -1,5 +1,5 @@
 import { SheetInfo } from "../classes/SheetInfo";
-import { camelCase } from "../tools/tools";
+import camelCase from "just-camel-case";
 
 export let layer_sheet: { [key: string]: string } = {};
 export let layer_sheet_cc: { [key: string]: string } = {};
@@ -12,7 +12,7 @@ export const getLayerSheetCC = () => {
   return layer_sheet_cc;
 };
 
-export const setLayerSheet = (sheet) => {
+export const setLayerSheet = (sheet: { [key: string]: string } ) => {
   layer_sheet = sheet;
   layer_sheet_cc = {};
   for (const key in layer_sheet) {
