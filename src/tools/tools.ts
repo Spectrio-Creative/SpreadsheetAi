@@ -47,23 +47,6 @@ export function priceCheck(priceString) {
   return priceType;
 }
 
-export function reduceText(textItem, rOption, overflow) {
-  const orHeight = textItem.textPath.height;
-  if (overflow) textItem.textPath.height = 10000;
-  const lineHeight =
-      (textItem.paragraphs[0].autoLeadingAmount *
-        textItem.textRange.characterAttributes.size) /
-      100,
-    isolatedLeading = lineHeight - textItem.textRange.characterAttributes.size,
-    linesN = textItem.lines.length,
-    projectedH = lineHeight * linesN - isolatedLeading;
-
-  if (rOption === "reduce") textItem.textRange.characterAttributes.size -= 1;
-
-  textItem.textPath.height = projectedH;
-  //    alert(orHeight - projectedH);
-  return projectedH - orHeight;
-}
 
 export function reduceGroup(groupItem, wLimit) {
   const originalWidth = groupItem.width;

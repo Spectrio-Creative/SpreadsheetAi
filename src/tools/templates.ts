@@ -1,4 +1,5 @@
 import { templates } from '../globals/globals';
+import { loopBackwards } from './arrays';
 
 export function findTemplate(templateTitle: string): Layer | undefined {
   let template: Layer;
@@ -11,4 +12,12 @@ export function findTemplate(templateTitle: string): Layer | undefined {
   });
 
   return template;
+}
+
+export function recursiveLayerLoop(layer: Layer, doThis: (layer: Layer) => unknown) {
+  doThis(layer);
+  if (layer.layers)
+    loopBackwards(layer.layers, (nextLayer: Layer) =>
+      recursiveLayerLoop(nextLayer, doThis)
+    );
 }

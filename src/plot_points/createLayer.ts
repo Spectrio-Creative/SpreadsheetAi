@@ -1,5 +1,4 @@
-import { recursiveLayerLoop } from "../tools/tools";
-import { findTemplate } from "../tools/templateTools";
+import { findTemplate, recursiveLayerLoop } from "../tools/templates";
 import { fillFromTemplate } from "./insertTemplateValues";
 import { document } from "../globals/document";
 import { layer_sheet_cc } from "../globals/globals";
