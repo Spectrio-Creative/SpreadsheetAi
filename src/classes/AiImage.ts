@@ -41,7 +41,6 @@ export class AiImage extends AiPageItem {
 
     this.obj = (item.parent as GroupItem).placedItems.add();
     this.hasImage = false;
-    this.options = options;
     this.original = { height: 0, width: 0 };
 
     for (let i = 0; i < file_urls.length; i++) {

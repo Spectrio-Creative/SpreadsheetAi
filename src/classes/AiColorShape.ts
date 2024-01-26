@@ -1,3 +1,4 @@
+import camelCase from 'just-camel-case';
 import { getLayerSheetCC } from "../globals/globals";
 import { hexToRgb } from '../tools/colors';
 import { AiPageItem } from "./AiPageItem";
@@ -13,9 +14,9 @@ export class AiColorShape extends AiPageItem {
     super(item);
 
     let hex = value;
-    if (options.color) {
+    if (this.options.color) {
       const layer_sheet_cc = getLayerSheetCC();
-      hex = layer_sheet_cc[options.color];
+      hex = layer_sheet_cc[camelCase(this.options.color)];
     }
     if (hex) this.setFillColor(hex);
   }

@@ -28,6 +28,7 @@ export interface AiGroupItemOptions extends AiPageItemOptions {
 export class AiGroupItem extends AiPageItem {
   background: AiPageItem;
   obj: GroupItem;
+  options: AiGroupItemOptions;
 
   constructor(item: GroupItem) {
     super(item);

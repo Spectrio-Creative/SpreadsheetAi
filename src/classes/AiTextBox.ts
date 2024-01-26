@@ -1,9 +1,10 @@
+import camelCase from "just-camel-case";
 import { getLayerSheetCC } from "../globals/globals";
 import { getFontFamily } from "../tools/classes";
 import { hexToRgb } from '../tools/colors';
-import { littleId } from '../tools/littleId';
+import { littleId } from "../tools/littleId";
 import { deMoustache } from "../tools/text";
-import { AiPageItem, AiPageItemOptions } from './AiPageItem';
+import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
 
 export interface AiTextBoxOptions extends AiPageItemOptions {
   maxHeight?: number;
@@ -30,7 +31,6 @@ export class AiTextBox extends AiPageItem {
 
     this.obj = item;
 
-    this.options = options;
     this.maxHeightInPixels = this.calculateMaxHeightInPixels();
     this.getFont();
     this.fonts = { regular: this.baseFont };
@@ -44,9 +44,17 @@ export class AiTextBox extends AiPageItem {
       this.setText(sanatizedVal);
     }
 
-    if (options.color) {
+    if (this.options.color) {
       const layer_sheet_cc = getLayerSheetCC();
-      this.setColor(layer_sheet_cc[options.color]);
+      const color = layer_sheet_cc[camelCase(`${this.options.color}`)];
+      if (!color) {
+        alert(`Color '${this.options.color}' not found in layer sheet.
+      Please check your layer sheet and try again.
+      layer_sheet_cc: ${JSON.stringify(layer_sheet_cc)}`);
+
+        return;
+      }
+      this.setColor(color);
     }
   }
 
@@ -84,7 +92,7 @@ export class AiTextBox extends AiPageItem {
       this.baseFont = characterAttributes.textFont;
     } catch (error) {
       // const textRanges = this.obj.textRanges;
-      
+
       // alert(`TextRange: ${textRanges.length}`);
 
       this.obj.locked = true;
@@ -141,9 +149,7 @@ export class AiTextBox extends AiPageItem {
         const start = workingText.indexOf(text);
         const end = start + text.length;
 
-        // @ts-ignore
         workingTextRange.start = start;
-        // @ts-ignore
         workingTextRange.end = end;
         workingTextRange.characterAttributes.textFont = this.fonts.italic;
         workingTextRange.contents = text.slice(1, -1);
@@ -182,8 +188,8 @@ export class AiTextBox extends AiPageItem {
     if (this.charactersVisible() < textBox.characters.length) {
       return true;
     }
-    
-    return false; 
+
+    return false;
   }
 
   fitToBox() {
@@ -200,7 +206,7 @@ export class AiTextBox extends AiPageItem {
     this.obj.textPath.height = 10000;
     const lineHeight = this.obj.textRange.characterAttributes.leading;
     const isolatedLeading =
-        lineHeight - this.obj.textRange.characterAttributes.size;
+      lineHeight - this.obj.textRange.characterAttributes.size;
     const linesN = this.obj.lines.length;
     let projectedH = lineHeight * linesN - isolatedLeading;
 
@@ -249,14 +255,14 @@ export class AiTextBox extends AiPageItem {
         .replace("justification.", "")
         .replace("fulljustify", "")
     ) {
-    case "center":
-      this.obj.left = widthDifference / 2 + this.original.left;
-      break;
-    case "right":
-      this.obj.left = this.original.left + widthDifference;
-      break;
-    default:
-      break;
+      case "center":
+        this.obj.left = widthDifference / 2 + this.original.left;
+        break;
+      case "right":
+        this.obj.left = this.original.left + widthDifference;
+        break;
+      default:
+        break;
     }
   }
 
@@ -310,19 +316,18 @@ export class AiTextBox extends AiPageItem {
       this.obj.name = name + `_${this.id}`; // temporarily append id to name to avoid name conflicts
       this.obj.convertPointObjectToAreaObject();
       app.redraw();
-      
+
       // reload item
       this.obj = app.activeDocument.pageItems.getByName(name + `_${this.id}`) as TextFrame;
       this.obj.name = name;
       app.redraw();
-      
+
       alert(`Layer "${this.obj.name}" was converted to Area Text.
       If the text box is not the correct size, try converting it to Area Text in your template file and resizing the box appropriately.`);
 
       return true;
     }
 
-    // if (this.obj.kind === TextType.PATHTEXT) 
+    // if (this.obj.kind === TextType.PATHTEXT)
     return false;
   }
-}

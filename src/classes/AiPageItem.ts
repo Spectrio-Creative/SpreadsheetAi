@@ -20,7 +20,6 @@ export class AiPageItem {
     this.options = parseOptions(item.name);
     this.original = { height: 0, width: 0, ratio: 1, top: 0, left: 0 };
     this.stored = { height: 0, width: 0, top: 0, left: 0 };
-    this.options = options;
     this.resetOriginalDimensions();
     this.resetOriginalPosition();
     this.padding = [0, 0, 0, 0];
