@@ -1,7 +1,7 @@
 import camelCase from "just-camel-case";
 import { getLayerSheetCC } from "../globals/globals";
-import { hexToRgb } from '../tools/colors';
 import { addItemClassToGlobal, getFontFamily } from "../tools/classes";
+import { hexToRgb, isHexColor } from "../tools/colors";
 import { littleId } from "../tools/littleId";
 import { deMoustache } from "../tools/text";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
@@ -9,6 +9,7 @@ import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
 export interface AiTextBoxOptions extends AiPageItemOptions {
   maxHeight?: number;
   color?: string;
+  nameColor?: string;
 }
 
 export class AiTextBox extends AiPageItem {
@@ -30,6 +31,15 @@ export class AiTextBox extends AiPageItem {
 
     if (item.name === "") item.name = item.contents;
 
+    // If value is a hex color, set options.color to item.name and set value to undefined
+    if (
+      isHexColor(value) &&
+      !(typeof this.options?.nameColor === "boolean" && !this.options.nameColor)
+    ) {
+      this.options = { ...this.options, color: item.name };
+      value = undefined;
+    }
+
     this.obj = item;
 
     this.maxHeightInPixels = this.calculateMaxHeightInPixels();
@@ -38,7 +48,7 @@ export class AiTextBox extends AiPageItem {
 
     // Set value if value is given
     if (typeof value !== "undefined" && value !== null) {
-      let sanatizedVal = `${value}`.replace(/""/g, "\"");
+      let sanatizedVal = `${value}`.replace(/""/g, '"');
       if (/^(['"]).*\1$/.test(sanatizedVal))
         sanatizedVal = sanatizedVal.slice(1, -1);
 
@@ -164,7 +174,8 @@ export class AiTextBox extends AiPageItem {
   }
 
   calculateMaxHeightInPixels(): number {
-    if (!this.options || !this.options.maxHeight) return Number.POSITIVE_INFINITY;
+    if (!this.options || !this.options.maxHeight)
+      return Number.POSITIVE_INFINITY;
     const leading = this.obj.textRange.characterAttributes.leading;
     return this.options.maxHeight * leading;
   }
@@ -319,7 +330,9 @@ export class AiTextBox extends AiPageItem {
       app.redraw();
 
       // reload item
-      this.obj = app.activeDocument.pageItems.getByName(name + `_${this.id}`) as TextFrame;
+      this.obj = app.activeDocument.pageItems.getByName(
+        name + `_${this.id}`
+      ) as TextFrame;
       this.obj.name = name;
       app.redraw();
 
@@ -332,3 +345,4 @@ export class AiTextBox extends AiPageItem {
     // if (this.obj.kind === TextType.PATHTEXT)
     return false;
   }
+}
