@@ -84,10 +84,8 @@ export function duplicateLayer(layer: Layer, document: Document | Layer) {
       const nextItem = pageItems[i];
 
       if (previousItem) {
-        // @ts-ignore
         layer.move(previousItem, ElementPlacement.PLACEBEFORE);
       } else if (nextItem) {
-        // @ts-ignore
         layer.move(nextItem, ElementPlacement.PLACEAFTER);
       }
     }

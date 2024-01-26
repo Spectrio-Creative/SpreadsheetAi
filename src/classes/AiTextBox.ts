@@ -23,7 +23,6 @@ export class AiTextBox extends AiPageItem {
     italic?: TextFont;
   };
   id: string = littleId();
-  
 
   constructor(item: TextFrame, value?: string) {
     super(item);

@@ -24,7 +24,7 @@ export const parseLocation = (location: string) => {
   if (isNaN(parseFloat(val1)) || isNaN(parseFloat(val2))) {
     return { x: "center", y: "center" };
   }
-  
+
   return { x: parseFloat(val1), y: parseFloat(val2) };
 };
 
@@ -52,6 +52,6 @@ export const getGroupAlignment = (group: GroupItem) => {
   return { x: groupAlignment, y: "center" };
 };
 
-export const getFontFamily = (textFont) => {
+export const getFontFamily = (textFont: TextFont) => {
   return app.textFonts.filter((tf) => tf.family === textFont.family);
 };

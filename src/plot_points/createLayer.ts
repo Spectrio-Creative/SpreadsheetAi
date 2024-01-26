@@ -35,7 +35,6 @@ export function createLayer(num: number) {
   newLayer.locked = false;
 
   // Move layer to the top / out of the template directory
-  // @ts-ignore
   newLayer.move(app.activeDocument, ElementPlacement.PLACEATBEGINNING);
 
   newLayer.name = layer_sheet_cc["layerName"]
