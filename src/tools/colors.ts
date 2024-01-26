@@ -17,3 +17,7 @@ export function componentToHex(c: number) {
 export function rgbToHex(r: number, g: number, b: number) {
   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+export function isHexColor(color: string) {
+  return /^#[0-9A-F]{6}$/i.test(color);
+}
