@@ -27,8 +27,7 @@ export function makeRectangle(
   rect.fillColor = fillColor;
   rect.stroked = false;
   rect.name = "Rectangle";
-  // @ts-ignore
-  rect.move(layer, ElementPlacement.PLACEATEND);
+  rect.move(layer, ElementPlacement.PLACEATBEGINNING);
 }
 
 export function textMeasure() {

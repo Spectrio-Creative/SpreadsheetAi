@@ -7,14 +7,10 @@ export function groupMeasure() {
 
   layers.forEach((layer) => {
     layer.groupItems.forEach((group) => {
-      if (group.name === "Image Group") {
-        const groupItem = new AiGroupItem(group, { align: "center" });
+      if (/^Image Group/.test(group.name)) {
+        const groupItem = new AiGroupItem(group);
 
         const bounds = group.geometricBounds;
-
-        const visibleBounds = group.visibleBounds;
-
-        const controlBounds = group.controlBounds;
 
         makeRectangle(
           layer,
@@ -30,17 +26,6 @@ export function groupMeasure() {
         makeRectangle(
           layer,
           {
-            x: controlBounds[0],
-            y: controlBounds[1],
-            width: controlBounds[2] - controlBounds[0],
-            height: controlBounds[1] - controlBounds[3],
-          },
-          "#ff00ff"
-        );
-
-        makeRectangle(
-          layer,
-          {
             x: bounds[0],
             y: bounds[1],
             width: bounds[2] - bounds[0],
@@ -48,23 +33,14 @@ export function groupMeasure() {
           },
           "#00eeff"
         );
+
         makeRectangle(
           layer,
           {
-            x: group.left,
-            y: group.top,
-            width: group.width,
-            height: group.height,
-          },
-          "#ff0000"
-        );
-        makeRectangle(
-          layer,
-          {
-            x: visibleBounds[0],
-            y: visibleBounds[1],
-            width: visibleBounds[2] - visibleBounds[0],
-            height: visibleBounds[1] - visibleBounds[3],
+            x: groupItem.left(true),
+            y: groupItem.top(true),
+            width: groupItem.width(true),
+            height: groupItem.height(true),
           },
           "#00ff00"
         );
