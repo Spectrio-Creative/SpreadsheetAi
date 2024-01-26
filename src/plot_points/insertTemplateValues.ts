@@ -2,90 +2,48 @@ import { AiImage } from "../classes/AiImage";
 import { AiTextBox } from "../classes/AiTextBox";
 import { AiPageItem } from "../classes/AiPageItem";
 import { AiGroupItem } from "../classes/AiGroupItem";
-import {
-  is_color,
-  is_image,
-  key_test,
-  layer_options,
-} from "../tools/regExTests";
-import { stringToObj } from "../tools/tools";
 import { layer_sheet } from "../globals/globals";
-import { AiColorShape } from "../classes/AiColorShape";
+import { getOrMakeItemClass } from '../tools/classes';
 
 export function fillLayer(item: PageItem) {
-  const options = layer_options.test(item.name)
-    ? stringToObj(item.name.match(layer_options)[1])
-    : {};
-    
-  // If the item name is if found in the spreadsheet
-  let newValue: string | undefined;
+  const newItem = getOrMakeItemClass(item);
 
-  for (const key in layer_sheet) {
-    if (!Object.prototype.hasOwnProperty.call(layer_sheet, key)) continue;
-    
-    const key_match = key_test(key);
-    if (item.name !== "" && key_match.test(item.name)) {
-      newValue = layer_sheet[key];
-      break;
-    }
+  if (newItem instanceof AiTextBox) {
+    const moustaches = newItem.replaceMoustaches(layer_sheet);
+    newItem.italicize();
+    if (moustaches) newItem.resizeBox();
   }
-
-  // If the item is a textframe, it might have
-  // moustaches to be replaced
-  if (item.typename === "TextFrame" && !is_color.test(newValue)) {
-    const new_textbox = new AiTextBox(item as TextFrame, newValue, options);
-    const moustaches = new_textbox.replaceMoustaches(layer_sheet);
-    new_textbox.italicize();
-    // If data has changed, then we resize.
-    if (moustaches) new_textbox.resizeBox();
-    return new_textbox;
-  }
-
-  if (newValue) {
-    if (is_image.test(newValue)) {
-      const new_image = new AiImage(item, newValue, options);
-      if (!new_image.hasImage) return;
-      return new_image;
-    } 
-    
-    if (is_color.test(newValue)) {
-      const new_color = new AiColorShape(item as PathItem, newValue, options);
-      return new_color;
-    } 
-    
-    // Missing type handler
-    alert(`Missing type handler for: ${item.typename}`);
-  }
-
   
-  // If PathItem, check for colors;
-  if (item.typename === "PathItem" && options.color) {
-    const new_color = new AiColorShape(item as PathItem, undefined, options);
-    return new_color;
-  }
-
-  return new AiPageItem(item, options);
+  return newItem;
 }
 
 export function fillFromTemplate(layer: Layer | GroupItem, options: string[] = []) {
   const offset = { x: 0, y: 0 };
+  const items: AiPageItem[] = [];
   layer.pageItems.forEach((item: PageItem) => {
     let currentItem: AiGroupItem | AiPageItem | AiTextBox | AiImage;
     if (item.typename === "GroupItem") {
-      const options = layer_options.test(item.name)
-        ? stringToObj(item.name.match(layer_options)[1])
-        : {};
+      const group = getOrMakeItemClass(item as GroupItem, "AiGroupItem");
+      // This may actually reference AiImageItems since they are grouped in order to be clipped
+      if (!(group instanceof AiGroupItem)) return;
 
-      const group = new AiGroupItem(item, options);
-      fillFromTemplate(item as GroupItem, ["offset"]);
+      const children = fillFromTemplate(item as GroupItem, ["offset"]);
       group.setBackground();
-      group.setPosition();
+      group.setAlignment();
+
+      children.forEach((child) => {
+        if (child instanceof AiImage) {
+          // child.resizeBox();
+        }
+      });
 
       currentItem = group;
     } else {
       const filled = fillLayer(item);
       if (filled) currentItem = filled;
     }
+
+    items.push(currentItem);
 
     if (options && options.includes("offset") && currentItem) {
       // For the moment, only move y
@@ -96,4 +54,6 @@ export function fillFromTemplate(layer: Layer | GroupItem, options: string[] = [
       offset.y += (currentItem.offset() as { x: number; y: number }).y;
     }
   });
+
+  return items;
 }
