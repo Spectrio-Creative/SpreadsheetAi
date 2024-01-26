@@ -14,22 +14,12 @@ import { fromCSV } from "./tools/csv";
 import { setUpStringMethods } from "./tools/extensions/string";
 import { document } from "./globals/document";
 import { templates } from "./globals/globals";
+import { exit, openCSV } from './tools/fs';
 
 const main = () => {
-  // Things work better when we've deselected
-  // document.selection = null;
-
   alert(`SpreadsheetAi (v${scriptVersion})`);
+  const csvFile = openCSV();
 
-  // @ts-ignore
-  // alert(ElementPlacement.PLACEATBEGINNING);
-
-  // const myFile = File.openDialog("Please select CSV Spreadsheet.", "*.csv", false);
-  const csvFile = File.openDialog(
-    "Open CSV file",
-    "Text: *.csv,All files: *.*",
-    false
-  );
   setUpStringMethods();
   setUpArrayMethods();
   extendExtendscript();
