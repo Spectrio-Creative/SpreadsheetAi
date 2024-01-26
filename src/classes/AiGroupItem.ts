@@ -29,8 +29,8 @@ export class AiGroupItem extends AiPageItem {
   background: AiPageItem;
   obj: GroupItem;
 
-  constructor(item: GroupItem, options) {
-    super(item, options);
+  constructor(item: GroupItem) {
+    super(item);
     this.background = undefined;
     this.findBackground();
     if (this.background) this.setBackgroundPadding();

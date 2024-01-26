@@ -25,8 +25,8 @@ export class AiImage extends AiPageItem {
   model: PageItem;
   clipped: boolean;
 
-  constructor(item: PageItem, url, options: AiImageOptions) {
-    super(item, options);
+  constructor(item: PageItem, path?: string) {
+    super(item);
 
     const file_urls = [
       url,

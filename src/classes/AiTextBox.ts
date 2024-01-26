@@ -24,8 +24,8 @@ export class AiTextBox extends AiPageItem {
   id: string = littleId();
   
 
-  constructor(item: TextFrame, value?: string, options?: AiTextBoxOptions) {
-    super(item, options);
+  constructor(item: TextFrame, value?: string) {
+    super(item);
     if (item.name === "") item.name = item.contents;
 
     this.obj = item;

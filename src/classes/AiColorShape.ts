@@ -9,8 +9,8 @@ export interface AiColorShapeOptions {
 export class AiColorShape extends AiPageItem {
   obj: PathItem;
 
-  constructor(item: PathItem, value: string, options: AiColorShapeOptions) {
-    super(item, options);
+  constructor(item: PathItem, value: string) {
+    super(item);
 
     let hex = value;
     if (options.color) {
