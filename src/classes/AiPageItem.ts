@@ -1,4 +1,8 @@
+import { playgroundCounter } from '../playground/global';
 import { addItemClassToGlobal, getOrMakeItemClass, parseOptions } from '../tools/classes';
+import { PaddingInput, normalizePadding } from '../tools/tools';
+// import { AiGroupItem } from './AiGroupItem';
+
 export interface AiPageItemOptions {
   maxHeight?: number;
   color?: string;
@@ -15,7 +19,10 @@ export class AiPageItem {
   padding: number[];
   name: string;
   typename: string;
+  newValue?: string;
+
   constructor(item: PageItem) {
+    playgroundCounter["AiPageItem"] = playgroundCounter["AiPageItem"] ? playgroundCounter["AiPageItem"] + 1 : 1;
 
     this.obj = item;
     this.options = parseOptions(item.name);
@@ -56,54 +63,54 @@ export class AiPageItem {
 
   setHeight(height: number) {
     this.obj.height = height;
-    return height;
   }
 
   setWidth(width: number) {
     this.obj.width = width;
-    return width;
   }
 
   setSize(width: number, height: number) {
     this.setHeight(height);
     this.setWidth(width);
-    return [width, height];
+  }
+
+  hideSelf() {
+    this.obj.hidden = true;
   }
 
   hide() {
     const parent = this.obj.parent as PageItem;
+    let {top, left, width: _width, height: _height} = parent;
+
+    this.hideSelf();
+
+    if (parent.typename === "GroupItem") {
+      const parentItem: AiPageItem = getOrMakeItemClass(parent, "infer");
+      top = parentItem.top();
+      left = parentItem.left();
+      _width = parentItem.width();
+      _height = parentItem.height();
+    }
+
     this.storeSizeAndPosition();
     this.setSize(0.1, 0.1);
     this.setPosition(
-      parent.left + parent.width,
-      parent.top - parent.height
+      left,
+      top
     );
   }
 
+  unHideSelf() {
+    this.obj.hidden = false;
+  }
+
   unHide() {
+    this.unHideSelf();
     this.resetFromStored();
   }
 
-  setPadding(padding) {
-    if (Array.isArray(padding)) {
-      if (padding.length > 4)
-        this.padding = [padding[0], padding[1], padding[2], padding[3]];
-      if (padding.length === 4) this.padding = padding;
-      if (padding.length === 3)
-        this.padding = [padding[0], padding[1], padding[2], padding[1]];
-      if (padding.length === 2)
-        this.padding = [padding[0], padding[1], padding[0], padding[1]];
-      if (padding.length === 1)
-        this.padding = [padding[0], padding[0], padding[0], padding[0]];
-      return;
-    }
-
-    const top = padding.top || 0,
-      bottom = padding.bottom || 0,
-      left = padding.left || 0,
-      right = padding.right || 0;
-
-    this.padding = [top, right, bottom, left];
+  setPadding(padding: PaddingInput) {
+    this.padding = normalizePadding(padding);
   }
 
   offset(axis?: "x" | "y") {
@@ -125,12 +132,12 @@ export class AiPageItem {
     this.obj.left -= x;
   }
 
-  setPosition(x, y) {
+  setPosition(x: number, y: number) {
     this.obj.top = y;
     this.obj.left = x;
   }
 
-  shrink(x, y) {
+  shrink(x: number, y: number) {
     x = x || 0;
     y = y || 0;
 
@@ -145,7 +152,7 @@ export class AiPageItem {
       this.original.ratio = this.original.width / this.original.height;
 
     } catch (error) {
-      alert(`Error thrown while getting text dimensions.
+      alert(`Error thrown while getting item dimensions.
       layer: ${this.obj.name}
       layer kind: ${(this.obj as TextFrame)?.kind}
       ${error.name}

@@ -1,12 +1,12 @@
 import {
   addItemClassToGlobal,
+  calculatePosition,
   getGroupAlignment,
-  isStringLocation,
-  parseLocation,
   getOrMakeItemClass,
+  parseAlignment,
+  parseOptions,
 } from "../tools/classes";
-import { layer_options } from "../tools/regExTests";
-import { stringToObj } from "../tools/tools";
+import { AiImage } from "./AiImage";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
 
 export type PositionOption = "top" | "bottom" | "left" | "right" | "center";
@@ -24,7 +24,8 @@ export interface Coordinates {
 }
 
 export interface AiGroupItemOptions extends AiPageItemOptions {
-  align?: string;
+  align?: Alignment | DoubleAlignment | "original";
+  position?: "original";
 }
 
 export class AiGroupItem extends AiPageItem {
@@ -40,15 +41,21 @@ export class AiGroupItem extends AiPageItem {
     if (this.background) this.setBackgroundPadding();
   }
 
-  measurableChildren() {
+  measurableChildren(ignoreBackground: boolean = false) {
     // let pageItems: (PageItem | AiPageItem)[] = [...this.obj.pageItems];
     let pageItems = [...this.obj.pageItems];
 
     // Filter out groups
-    pageItems = pageItems.filter((item) => item.typename !== "GroupItem");
+    pageItems = pageItems.filter((item) => {
+      if (item.typename === "GroupItem") return false;
+      if (item.hidden) return false;
+      if (ignoreBackground && item.uuid === this.background.uuid) return false;
+      return true;
+    });
 
     // Filter out clipped items if clipped is true
-    if (this.obj.clipped) pageItems = pageItems.filter((item) => !!(item as PathItem)?.clipping);
+    if (this.obj.clipped)
+      pageItems = pageItems.filter((item) => !!(item as PathItem)?.clipping);
 
     // Convert textFrameItems to AiTextBoxes
     // pageItems = pageItems.map((item) => {
@@ -64,42 +71,74 @@ export class AiGroupItem extends AiPageItem {
     return pageItems;
   }
 
-  getPosition(position?: PositionOptionLimited) {
-    if (!position) return [this.getPosition("top"), this.getPosition("left")];
+  getPosition(
+    position?: PositionOptionLimited,
+    ignoreBackground: boolean = false
+  ): number | [number, number] {
+    if (!position) {
+      return [
+        -this.getPosition("top", ignoreBackground),
+        this.getPosition("left", ignoreBackground),
+      ] as [number, number];
+    }
+
+    if (ignoreBackground && (!this.background || !this.background.uuid)) {
+      ignoreBackground = false;
+    }
 
     let min = Number.POSITIVE_INFINITY;
     this.obj.groupItems.forEach((groupItem) => {
-      const groupPosition = group.getPosition(position);
       const group = getOrMakeItemClass(groupItem, "AiGroupItem") as AiGroupItem;
+      // Check if group is background
+      if (ignoreBackground && group.uuid === this.background.uuid) return;
+      let groupPosition = group.getPosition(
+        position,
+        ignoreBackground
+      ) as number;
+      if (position === "top") groupPosition = -groupPosition;
       if (groupPosition < min) min = groupPosition;
     });
 
-    const pageItems = this.measurableChildren();
+    const pageItems = this.measurableChildren(ignoreBackground);
     pageItems.forEach((pageItem) => {
-      const pageItemPosition = position === "top" ? -pageItem[position] : pageItem[position];
+      let pageItemPosition = pageItem[position];
+      if (position === "top") pageItemPosition = -pageItemPosition;
       if (pageItemPosition < min) min = pageItemPosition;
     });
 
     return min;
   }
 
-  getDimension(dimension?: DimensionOption) {
-    if (!dimension)
-      return [this.getDimension("width"), this.getDimension("height")];
+  getDimension(
+    dimension?: DimensionOption,
+    ignoreBackground: boolean = false
+  ): number | [number, number] {
+    if (!dimension) {
+      return [
+        this.getDimension("width", ignoreBackground),
+        this.getDimension("height", ignoreBackground),
+      ] as [number, number];
+    }
 
-    const position: PositionOptionLimited = dimension === "width" ? "left" : "top";
+    if (ignoreBackground && (!this.background || !this.background.uuid)) {
+      ignoreBackground = false;
+    }
+
+    const position: PositionOptionLimited =
+      dimension === "width" ? "left" : "top";
 
     let max = 0;
     let coordinates: Coordinates[] = [];
     this.obj.groupItems.forEach((groupItem) => {
       const group = getOrMakeItemClass(groupItem, "AiGroupItem") as AiGroupItem;
+      if (ignoreBackground && group.uuid === this.background.uuid) return;
       coordinates.push({
-        [position]: group[position](),
-        [dimension]: group[dimension](),
+        [position]: group[position](ignoreBackground),
+        [dimension]: group[dimension](ignoreBackground),
       });
     });
 
-    const pageItems = this.measurableChildren();
+    const pageItems = this.measurableChildren(ignoreBackground);
     pageItems.forEach((pageItem) => {
       coordinates.push({
         name: pageItem.name,
@@ -109,7 +148,7 @@ export class AiGroupItem extends AiPageItem {
     });
 
     coordinates = coordinates.map((coor) => {
-      if(position === "left") return coor;
+      if (position === "left") return coor;
       return {
         ...coor,
         [position]: -coor[position],
@@ -138,7 +177,9 @@ export class AiGroupItem extends AiPageItem {
       return true;
     });
 
-    const minPosition = coordinates[0] ? coordinates[0][position] : Number.POSITIVE_INFINITY;
+    const minPosition = coordinates[0]
+      ? coordinates[0][position]
+      : Number.POSITIVE_INFINITY;
 
     const groupsDimension =
       coordinates.length > 0
@@ -151,20 +192,20 @@ export class AiGroupItem extends AiPageItem {
     return max;
   }
 
-  top() {
-    return -this.getPosition("top");
+  top(ignoreBackground: boolean = false) {
+    return -this.getPosition("top", ignoreBackground) as number;
   }
 
-  left() {
-    return this.getPosition("left");
+  left(ignoreBackground: boolean = false) {
+    return this.getPosition("left", ignoreBackground) as number;
   }
 
-  width() {
-    return this.getDimension("width");
+  width(ignoreBackground: boolean = false) {
+    return this.getDimension("width", ignoreBackground) as number;
   }
 
-  height() {
-    return this.getDimension("height");
+  height(ignoreBackground: boolean = false) {
+    return this.getDimension("height", ignoreBackground) as number;
   }
 
   setTop(top: number) {
@@ -181,101 +222,94 @@ export class AiGroupItem extends AiPageItem {
     return left;
   }
 
-  setPosition(x?: number | string, y?: number | string) {
+  setAlignment(x: Alignment | DoubleAlignment = "left", y?: VerticalAlignment) {
+    const { align, position } = this.options;
+    if (align === "original" || position === "original") return;
+
+    if (align) {
+      x = align;
+    }
+
     if (!x && !y) {
       const groupAlignment = getGroupAlignment(this.obj);
 
       x = groupAlignment.x;
       y = groupAlignment.y;
-      if (this.options.align) {
-        x = this.options.align;
-        y = undefined;
-      }
-    }
-    if (!y && isStringLocation(`${x}`)) {
-      const location = parseLocation(`${x}`);
-      x = location.x;
-      y = location.y;
     }
 
-    if (typeof x === "string") {
-      if (/^(top|bottom)$/.test(x)) {
-        y = x;
-        x = "center";
-      }
+    [x, y] = parseAlignment(x, y);
 
-      x = x || "left";
-      y = y || (x === "center" ? "center" : "top");
+    const [width, height] = this.getDimension() as [number, number];
+    const [newX, newY] = calculatePosition(this.original, { height, width })[
+      `${x} ${y}`
+    ]();
 
-      const [width, height] = this.getDimension();
-      // const [top, left] = this.getPosition();
+    this.setTop(newY);
+    this.setLeft(newX);
 
-      const whys = {
-        top: this.original.top,
-        center:
-          (-1 * (this.original.height - height)) / 2 +
-          this.original.top,
-        bottom: this.original.top - (this.original.height - height),
-      };
-
-      const exes = {
-        left: this.original.left,
-        center: (this.original.width - width) / 2 + this.original.left,
-        right: this.original.left + (this.original.width - width),
-      };
-
-      this.setTop(y in whys ? whys[y] : this.obj.top);
-      this.setLeft(x in exes ? exes[x] : this.obj.left);
-      return;
-    }
-
-    super.setPosition(x, y);
+    // super.setPosition(x, y);
   }
 
   findBackground() {
-    let bg: AiPageItem;
-    this.obj.pageItems.forEach((item) => {
-      const options = layer_options.test(item.name)
-        ? stringToObj(item.name.match(layer_options)[1])
-        : {};
-      if (options.groupBackground) bg = new AiPageItem(item, options);
-    });
+    function recursiveSearch(pageItems: PageItem[]): AiPageItem {
+      let bg: AiPageItem;
+      pageItems.forEach((item) => {
+        if (bg) return;
+        const options = parseOptions(item.name);
+        if (options.groupBackground) bg = getOrMakeItemClass(item);
+        if (item.typename === "GroupItem") {
+          bg = recursiveSearch((item as GroupItem).pageItems);
+        }
+      });
+      return bg;
+    }
+
+    const bg = recursiveSearch(this.obj.pageItems);
+
+    if (bg && bg instanceof AiImage) {
+      // alert(`Found background image: ${bg.name}`);
+    }
 
     this.background = bg;
   }
 
   setBackgroundPadding() {
-    const prior = {
-      top: this.obj.top,
-      left: this.obj.left,
-      width: this.obj.width,
-      height: this.obj.height,
+    const outer = {
+      top: this.top(),
+      left: this.left(),
+      width: this.width(),
+      height: this.height(),
     };
 
-    this.background.hide();
+    const inner = {
+      top: this.top(true),
+      left: this.left(true),
+      width: this.width(true),
+      height: this.height(true),
+    };
+
+    const top = outer.top - inner.top;
+    const left = inner.left - outer.left;
+    const right = (outer.left + outer.width) - (inner.left + inner.width);
+    const bottom = (inner.top - inner.height) - (outer.top - outer.height);
+
+    const calculatedPadding = [top, right, bottom, left];
 
     const padding = this.background.options.padding
       ? this.background.options.padding
-      : [
-        -(this.obj.top - prior.top),
-        -(this.obj.left + this.obj.width - (prior.left + prior.width)),
-        this.obj.top - this.obj.height - (prior.top - prior.height),
-        this.obj.left - prior.left,
-      ];
+      : calculatedPadding;
 
     this.background.setPadding(padding);
-    this.background.unHide();
   }
 
   setBackground() {
     if (!this.background) return;
 
-    this.background.hide();
     const actual = {
-      top: this.obj.top,
-      left: this.obj.left,
-      width: this.obj.width,
-      height: this.obj.height,
+      top: this.top(true),
+      left: this.left(true),
+      width: this.width(true),
+      height: this.height(true),
     };
     const padding = this.background.padding;
 
