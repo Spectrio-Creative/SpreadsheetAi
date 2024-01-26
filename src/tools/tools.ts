@@ -16,28 +16,63 @@ export function priceCheck(priceString: string) {
 }
 
 export function stringToObj(str: string) {
-  // insure that double quotes are used to make sure that
-  // JSON.parse doesn't fail
-  let jsonStr = str.replace(/'?(\w+)'? ?:/g, function (match, p1) {
-    return "\"" + p1 + "\":";
+  // Wrap keys without quote with valid double quote
+  let jsonStr = str.replace(/([\$\w]+)\s*:/g, function (match, key) {
+    return "\"" + key + "\":";
   });
 
   jsonStr = jsonStr.replace(
-    /:\s*?(?:'(.*?)'|([1-9]+)|(true|false)|([\w]+))/g,
-    (m, p1, p2, p3, p4) => {
-      if (p2 || p3) return m;
-      if (p4) return ": \"" + p4 + "\"";
-      if (p1) return ": \"" + p1 + "\"";
+    /:\s*?(?:'(.*?)'|([0-9]+\.?[0-9]*)|(true|false)|([\w]+[ \w]*))/g,
+    (m, singleQuoted, num, bool, unQuoted) => {
+      if (num || bool) return m;
+      if (unQuoted) return ": \"" + unQuoted.trim() + "\"";
+      if (singleQuoted) return ": \"" + singleQuoted.trim() + "\"";
       return m;
     }
   );
-  // jsonStr = jsonStr.replace(/:\s*?'(.*?)'/g, (m, p1) => {
-  //   return ': "' + p1 + '"';
-  // });
 
   return JSON.parse(jsonStr);
 }
 
-export const oppositeDimension = (dim: dimension) => {
+export function oppositeDimension(dim: DimensionType) {
   return dim === "width" ? "height" : "width";
-};
+}
+
+
+export type PaddingObject = { top: number, right: number, bottom: number, left: number };
+export type PaddingInput = number | number[] | PaddingObject;
+
+export function normalizePadding(padding: PaddingInput): [number, number, number, number] {
+  if (typeof padding === "number") return [padding, padding, padding, padding];
+  if (padding === undefined) return [0, 0, 0, 0];
+
+  let normalizedPadding = [];
+  
+  if (Array.isArray(padding)) {
+    normalizedPadding = [...padding];
+    while (normalizedPadding.length < 4) {
+      const length = normalizedPadding.length;
+      switch(length) {
+        case 1:
+        case 2:
+          normalizedPadding.push(normalizedPadding[0]);
+          break;
+        case 3:
+          normalizedPadding.push(normalizedPadding[1]);
+          break;
+        default:
+          normalizedPadding.push(0);
+          break;
+      }
+    }
+  
+    normalizedPadding = normalizedPadding.slice(0, 4) as [number, number, number, number];
+  }
+
+  const top = (padding as PaddingObject).top || normalizedPadding[0] || 0;
+  const bottom = (padding as PaddingObject).bottom || normalizedPadding[2] || 0;
+  const left = (padding as PaddingObject).left || normalizedPadding[3] || 0;
+  const right = (padding as PaddingObject).right || normalizedPadding[1] || 0;
+
+  return [top, right, bottom, left];
+}
