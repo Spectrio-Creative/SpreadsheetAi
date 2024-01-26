@@ -2,6 +2,7 @@ import camelCase from 'just-camel-case';
 import { getLayerSheetCC } from "../globals/globals";
 import { hexToRgb } from '../tools/colors';
 import { AiPageItem } from "./AiPageItem";
+import { addItemClassToGlobal } from '../tools/classes';
 
 export interface AiColorShapeOptions {
   color?: string;
@@ -12,6 +13,7 @@ export class AiColorShape extends AiPageItem {
 
   constructor(item: PathItem, value: string) {
     super(item);
+    addItemClassToGlobal(this);
 
     let hex = value;
     if (this.options.color) {

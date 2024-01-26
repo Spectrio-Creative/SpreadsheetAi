@@ -1,5 +1,4 @@
 import { document, templatePath } from "../globals/document";
-import { isStringLocation, parseLocation } from "../tools/classes";
 import { oppositeDimension } from '../tools/tools';
 import { AiPageItem, AiPageItemOptions } from './AiPageItem';
 
@@ -8,6 +7,7 @@ export type SizeOption = "contain" | "cover" | "original";
 export type Alignment = "left" | "right" | "center" | "top" | "bottom";
 
 export type DoubleAlignment = "left top" | "left center" | "left bottom" | "right top" | "right center" | "right bottom" | "center top" | "center center" | "center bottom";
+import { addItemClassToGlobal, calculatePosition, parseAlignment } from "../tools/classes";
 
 export interface AiImageOptions extends AiPageItemOptions {
   size?: SizeOption;
@@ -33,6 +33,7 @@ export class AiImage extends AiPageItem {
       templatePath + "/" + url,
       templatePath + "/links/" + url,
       templatePath + "/images/sorcerer/" + url,
+    addItemClassToGlobal(this);
     ];
 
     this.model = item;
@@ -40,6 +41,7 @@ export class AiImage extends AiPageItem {
     app.executeMenuCommand("group");
 
     this.obj = (item.parent as GroupItem).placedItems.add();
+    addItemClassToGlobal(this, this.parent.uuid);
     this.hasImage = false;
     this.original = { height: 0, width: 0 };
 

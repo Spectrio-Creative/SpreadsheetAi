@@ -1,7 +1,7 @@
 import camelCase from "just-camel-case";
 import { getLayerSheetCC } from "../globals/globals";
-import { getFontFamily } from "../tools/classes";
 import { hexToRgb } from '../tools/colors';
+import { addItemClassToGlobal, getFontFamily } from "../tools/classes";
 import { littleId } from "../tools/littleId";
 import { deMoustache } from "../tools/text";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
@@ -26,6 +26,8 @@ export class AiTextBox extends AiPageItem {
 
   constructor(item: TextFrame, value?: string) {
     super(item);
+    addItemClassToGlobal(this);
+
     if (item.name === "") item.name = item.contents;
 
     this.obj = item;

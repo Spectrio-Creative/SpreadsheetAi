@@ -1,7 +1,9 @@
 import {
+  addItemClassToGlobal,
   getGroupAlignment,
   isStringLocation,
   parseLocation,
+  getOrMakeItemClass,
 } from "../tools/classes";
 import { layer_options } from "../tools/regExTests";
 import { stringToObj } from "../tools/tools";
@@ -32,6 +34,7 @@ export class AiGroupItem extends AiPageItem {
 
   constructor(item: GroupItem) {
     super(item);
+    addItemClassToGlobal(this);
     this.background = undefined;
     this.findBackground();
     if (this.background) this.setBackgroundPadding();
@@ -66,8 +69,8 @@ export class AiGroupItem extends AiPageItem {
 
     let min = Number.POSITIVE_INFINITY;
     this.obj.groupItems.forEach((groupItem) => {
-      const group = new AiGroupItem(groupItem, {});
       const groupPosition = group.getPosition(position);
+      const group = getOrMakeItemClass(groupItem, "AiGroupItem") as AiGroupItem;
       if (groupPosition < min) min = groupPosition;
     });
 
@@ -89,7 +92,7 @@ export class AiGroupItem extends AiPageItem {
     let max = 0;
     let coordinates: Coordinates[] = [];
     this.obj.groupItems.forEach((groupItem) => {
-      const group = new AiGroupItem(groupItem, {});
+      const group = getOrMakeItemClass(groupItem, "AiGroupItem") as AiGroupItem;
       coordinates.push({
         [position]: group[position](),
         [dimension]: group[dimension](),

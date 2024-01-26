@@ -1,3 +1,4 @@
+import { addItemClassToGlobal, getOrMakeItemClass, parseOptions } from '../tools/classes';
 export interface AiPageItemOptions {
   maxHeight?: number;
   color?: string;
@@ -6,7 +7,7 @@ export interface AiPageItemOptions {
 }
 
 export class AiPageItem {
-  uuid: string;
+  uuid?: string;
   obj: PageItem;
   original: Box;
   stored: Box;
@@ -26,6 +27,11 @@ export class AiPageItem {
 
     this.name = item.name;
     this.typename = "Ai" + item.typename;
+
+    const uuid = item.uuid;
+    if (uuid) this.uuid = uuid;
+
+    addItemClassToGlobal(this);
   }
 
   top() {

@@ -1,3 +1,4 @@
+import { AiPageItem } from '../classes/AiPageItem';
 import { SheetInfo } from "../classes/SheetInfo";
 import camelCase from "just-camel-case";
 
@@ -19,6 +20,8 @@ export const setLayerSheet = (sheet: { [key: string]: string } ) => {
     layer_sheet_cc[camelCase(key)] = layer_sheet[key];
   }
 };
+
+export const aiObjByUUID: { [key: string]: AiPageItem } = {};
 
 export const templates: Layer[] = [];
 
