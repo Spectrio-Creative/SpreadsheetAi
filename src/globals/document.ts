@@ -7,3 +7,7 @@ export let document: Document;
 export const createDocument = () => {
   document = duplicateDocument();
 };
+
+export const assignDocument = (doc: Document) => {
+  document = doc;
+};
