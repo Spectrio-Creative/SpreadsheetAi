@@ -25,55 +25,51 @@ const main = () => {
   extendExtendscript();
   forceInclusions();
 
-  if (csvFile != null) {
-    try {
-      // open file
-      const fileOK = csvFile.open("r");
-      let fileString = "";
-      if (fileOK) {
-        prepare();
-        while (!csvFile.eof) {
-          fileString += csvFile.readln() + "\n";
-        }
+  if (csvFile == null) return exit("No CSV file selected.");
 
-        const csvJSON = fromCSV({
-          data: fileString,
-          separator: ",",
-        }).toJSON() as SpreadsheetRow[];
-        const purged = JSON.parse(JSON.stringify(csvJSON));
-        
-        // Save all pre-existing layers as templates
-        document.layers.forEach((layer) => {
-          templates.push(layer);
-          if (/templates/i.test(layer.name)) {
-            layer.layers.forEach((subLayer) => {
-              templates.push(subLayer);
-            });
-          }
+  try {
+    // open file
+    const fileOK = csvFile.open("r");
+    let fileString = "";
+
+    if (!fileOK) return exit("File open failed.");
+
+    prepare();
+    while (!csvFile.eof) {
+      fileString += csvFile.readln() + "\n";
+    }
+
+    const csvJSON = fromCSV({ data: fileString, separator: "," }).toJSON();
+    // Purge all empty rows and other oddities from the CSV / CSV parser
+    const purged: SpreadsheetRow[] = JSON.parse(JSON.stringify(csvJSON));
+
+    // Save all pre-existing layers as templates
+    document.layers.forEach((layer) => {
+      templates.push(layer);
+      if (/templates/i.test(layer.name)) {
+        layer.layers.forEach((subLayer) => {
+          templates.push(subLayer);
         });
-
-        for (let i = 0; i < purged.length; i++) {
-          setLayerSheet(purged[i]);
-          createLayer(i);
-          app.redraw();
-        }
-
-        csvFile.close();
-        
-        // Remove template layers
-        templates.forEach((layer) => {
-          layer.remove();
-        });
-      } else {
-        alert("File open failed!");
       }
-    } catch (e) {
-      alert(`${e.name}
+    });
+
+    // Create layers from CSV
+    for (let i = 0; i < purged.length; i++) {
+      setLayerSheet(purged[i]);
+      createLayer(i);
+      app.redraw();
+    }
+
+    // Close the CSV & Remove template layers
+    csvFile.close();
+    templates.forEach((layer) => {
+      layer.visible = true;
+      layer.remove();
+    });
+  } catch (e) {
+    alert(`${e.name}
       ${e.message}
       (line #${e.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
-    }
-  } else {
-    alert("No CSV file selected.");
   }
 
   cleanUp();
