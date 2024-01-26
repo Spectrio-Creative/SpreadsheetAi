@@ -19,7 +19,7 @@ module.exports = {
   },
   ignorePatterns: ["package.json", "actions/*", "build/*", "dist/*"],
   rules: {
-    indent: ["error", 2],
+    indent: ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
     // quotes: ["error", "double"],
     semi: ["error", "always"],
