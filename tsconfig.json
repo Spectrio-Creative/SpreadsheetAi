@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "lib": ["ES2022"],
+        "target": "ES5",
+        "ignoreDeprecations": "5.0",
+        "types": [
+            "types-for-adobe/Illustrator/2022"
+        ],
+        "resolveJsonModule": true,
+        "downlevelIteration": true
+    },
+    "include": ["src", "archive/convertObj.ts"],
+    "exclude": ["node_modules"]
+}
