@@ -126,12 +126,12 @@ export class AiTextBox extends AiPageItem {
       family = getFontFamily(textFont),
       styleMatch = /^([\w ]*?)\s*(italic)?\s*?$/i,
       regularMatch = /^(roman|regular|$)/i,
-      style = textFont.style.match(styleMatch),
+      style = textFont.style.match(styleMatch) || [],
       weight = style[1],
       italic = style[2];
 
     family.forEach((font) => {
-      const fontStyle = font.style.match(styleMatch);
+      const fontStyle = font.style.match(styleMatch) || [];
       if (
         weight === fontStyle[1] ||
         (regularMatch.test(weight) && regularMatch.test(fontStyle[1]))
