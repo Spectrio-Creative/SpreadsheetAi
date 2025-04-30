@@ -40,3 +40,9 @@ It should be noted that the default alignment when none is given is `center cent
 
 ![](../../images/image-positioning.jpg)
 _Alignment examples._
+
+## Group Background
+
+`{ groupBackground: [boolean] }`
+
+See the "Background" section of the [Group documentation](../groups/).
