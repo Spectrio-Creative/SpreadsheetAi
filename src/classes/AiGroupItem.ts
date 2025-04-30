@@ -1,3 +1,4 @@
+import { layer_sheet } from "../globals/globals";
 import {
   addItemClassToGlobal,
   calculatePosition,
@@ -6,6 +7,7 @@ import {
   parseAlignment,
   parseOptions,
 } from "../tools/classes";
+import { hasMutableChildren } from "../tools/item";
 import { AiImage } from "./AiImage";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
 
@@ -32,12 +34,14 @@ export class AiGroupItem extends AiPageItem {
   background: AiPageItem;
   obj: GroupItem;
   options: AiGroupItemOptions;
+  mutableChildren: boolean;
 
   constructor(item: GroupItem) {
     super(item);
     addItemClassToGlobal(this);
     this.background = undefined;
     this.findBackground();
+    this.mutableChildren = hasMutableChildren(item, Object.keys(layer_sheet))
     if (this.background) this.setBackgroundPadding();
   }
 
@@ -224,6 +228,8 @@ export class AiGroupItem extends AiPageItem {
 
   setAlignment(x: Alignment | DoubleAlignment = "left", y?: VerticalAlignment) {
     const { align, position } = this.options;
+    
+    if (!align && !this.mutableChildren) return;
     if (align === "original" || position === "original") return;
 
     if (align) {
@@ -253,14 +259,17 @@ export class AiGroupItem extends AiPageItem {
   findBackground() {
     function recursiveSearch(pageItems: PageItem[]): AiPageItem {
       let bg: AiPageItem;
-      pageItems.forEach((item) => {
-        if (bg) return;
+      for (const item of pageItems) {
         const options = parseOptions(item.name);
         if (options.groupBackground) bg = getOrMakeItemClass(item);
+        if (bg) break;
+
         if (item.typename === "GroupItem") {
           bg = recursiveSearch((item as GroupItem).pageItems);
         }
-      });
+        
+      };
+
       return bg;
     }
 

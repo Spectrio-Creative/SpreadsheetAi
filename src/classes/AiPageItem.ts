@@ -1,6 +1,7 @@
 import { playgroundCounter } from '../playground/global';
 import { addItemClassToGlobal, getOrMakeItemClass, parseOptions } from '../tools/classes';
-import { PaddingInput, normalizePadding } from '../tools/tools';
+import { layer_options } from '../tools/regExTests';
+import { PaddingInput, normalizePadding, stringToObj } from '../tools/tools';
 // import { AiGroupItem } from './AiGroupItem';
 
 export interface AiPageItemOptions {
@@ -180,4 +181,15 @@ export class AiPageItem {
     this.obj.top = this.stored.top;
     this.obj.left = this.stored.left;
   }
+ 
+  // parseLayerName(layerName: string): string {
+  //   // const nameParts = /(.*?)(\{.*\})\s*?$/
+  //   // if (nameParts.test(layerName)) {
+  //   //   const [_full, name, optionStr] = layerName.match(nameParts);
+  //   //   const options: Record<string, any> = stringToObj(optionStr)
+  //   //   return [name, options]
+  //   // }
+  
+  //   return layerName
+  // }
 }
