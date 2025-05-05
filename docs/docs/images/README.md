@@ -45,4 +45,4 @@ _Alignment examples._
 
 `{ groupBackground: [boolean] }`
 
-See the "Background" section of the [Group documentation](../groups/).
+See the "[Background](../groups/#background)" section of the [Group documentation](../groups/).
