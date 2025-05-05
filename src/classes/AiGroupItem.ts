@@ -41,7 +41,8 @@ export class AiGroupItem extends AiPageItem {
     addItemClassToGlobal(this);
     this.background = undefined;
     this.findBackground();
-    this.mutableChildren = hasMutableChildren(item, Object.keys(layer_sheet))
+    // this.mutableChildren = false
+    this.mutableChildren = hasMutableChildren(item, Object.keys(layer_sheet));
     if (this.background) this.setBackgroundPadding();
   }
 
@@ -77,7 +78,7 @@ export class AiGroupItem extends AiPageItem {
 
   getPosition(
     position?: PositionOptionLimited,
-    ignoreBackground: boolean = false
+    ignoreBackground: boolean = false,
   ): number | [number, number] {
     if (!position) {
       return [
@@ -97,7 +98,7 @@ export class AiGroupItem extends AiPageItem {
       if (ignoreBackground && group.uuid === this.background.uuid) return;
       let groupPosition = group.getPosition(
         position,
-        ignoreBackground
+        ignoreBackground,
       ) as number;
       if (position === "top") groupPosition = -groupPosition;
       if (groupPosition < min) min = groupPosition;
@@ -115,7 +116,7 @@ export class AiGroupItem extends AiPageItem {
 
   getDimension(
     dimension?: DimensionOption,
-    ignoreBackground: boolean = false
+    ignoreBackground: boolean = false,
   ): number | [number, number] {
     if (!dimension) {
       return [
@@ -228,7 +229,7 @@ export class AiGroupItem extends AiPageItem {
 
   setAlignment(x: Alignment | DoubleAlignment = "left", y?: VerticalAlignment) {
     const { align, position } = this.options;
-    
+
     if (!align && !this.mutableChildren) return;
     if (align === "original" || position === "original") return;
 
@@ -267,8 +268,7 @@ export class AiGroupItem extends AiPageItem {
         if (item.typename === "GroupItem") {
           bg = recursiveSearch((item as GroupItem).pageItems);
         }
-        
-      };
+      }
 
       return bg;
     }
@@ -299,8 +299,8 @@ export class AiGroupItem extends AiPageItem {
 
     const top = outer.top - inner.top;
     const left = inner.left - outer.left;
-    const right = (outer.left + outer.width) - (inner.left + inner.width);
-    const bottom = (inner.top - inner.height) - (outer.top - outer.height);
+    const right = outer.left + outer.width - (inner.left + inner.width);
+    const bottom = inner.top - inner.height - (outer.top - outer.height);
 
     const calculatedPadding = [top, right, bottom, left];
 
@@ -324,11 +324,11 @@ export class AiGroupItem extends AiPageItem {
 
     this.background.setPosition(
       actual.left - padding[3],
-      actual.top + padding[0]
+      actual.top + padding[0],
     );
     this.background.setSize(
       actual.width + (padding[1] + padding[3]),
-      actual.height + (padding[0] + padding[2])
+      actual.height + (padding[0] + padding[2]),
     );
   }
 }

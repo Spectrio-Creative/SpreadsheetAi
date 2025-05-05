@@ -5,6 +5,7 @@ import { hexToRgb, isHexColor } from "../tools/colors";
 import { littleId } from "../tools/littleId";
 import { deMoustache } from "../tools/text";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
+import { safeKey } from "../tools/tools";
 
 export interface AiTextBoxOptions extends AiPageItemOptions {
   maxHeight?: number;
@@ -17,7 +18,7 @@ export class AiTextBox extends AiPageItem {
   obj: TextFrame;
   options: AiTextBoxOptions;
   original: Box;
-  baseFont: TextFont;
+  baseFont: null | TextFont;
   maxHeightInPixels: number;
   fonts: {
     regular: TextFont;
@@ -98,37 +99,42 @@ export class AiTextBox extends AiPageItem {
 
   getFont() {
     try {
-      const textRange = this.obj.textRange;
-      const characterAttributes = textRange.characterAttributes;
-      this.baseFont = characterAttributes.textFont;
+      const textRanges = this.obj.textRanges;
+
+      for (const textRange of textRanges) {
+        const characterAttributes = textRange.characterAttributes;
+        const [font, _error] = safeKey(characterAttributes, "textFont");
+        if (font) {
+          this.baseFont = font;
+          break;
+        }
+      }
+
+      if (!this.baseFont) {
+        alert(`Could not find font for ${this.obj.name}`);
+      }
     } catch (error) {
-      // const textRanges = this.obj.textRanges;
-
-      // alert(`TextRange: ${textRanges.length}`);
-
-      this.obj.locked = true;
-
-      alert(`Error thrown while getting text font.
-      layer: ${this.obj.name}
-      layer kind: ${this.obj.kind}
-      contents: ${this.obj.contents}
-      ${error.name}
-      ${error.message}
-      (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
-      throw error;
+      this.baseFont = null;
+      // alert(`Error thrown while getting text font.
+      // layer: ${this.obj.name}
+      // layer kind: ${this.obj.kind}
+      // contents: ${this.obj.contents}
+      // ${error.name}
+      // ${error.message}
+      // (line #${error.line} in ${$.stack.match(/\[(.*?)\]/)[1]})`);
+      // throw error;
     }
-    // const textFont = this.obj.textRange.characterAttributes.textFont;
-    // this.baseFont = textFont;
   }
 
   getFontAltertatives() {
-    const textFont = this.baseFont,
-      family = getFontFamily(textFont),
-      styleMatch = /^([\w ]*?)\s*(italic)?\s*?$/i,
-      regularMatch = /^(roman|regular|$)/i,
-      style = textFont.style.match(styleMatch) || [],
-      weight = style[1],
-      italic = style[2];
+    if (!this.baseFont) return;
+    const textFont = this.baseFont;
+    const family = getFontFamily(textFont);
+    const styleMatch = /^([\w ]*?)\s*(italic)?\s*?$/i;
+    const regularMatch = /^(roman|regular|$)/i;
+    const style = textFont.style.match(styleMatch) || [];
+    const weight = style[1];
+    const italic = style[2];
 
     family.forEach((font) => {
       const fontStyle = font.style.match(styleMatch) || [];
@@ -152,6 +158,13 @@ export class AiTextBox extends AiPageItem {
     let workingText = this.obj.contents;
 
     if (itMatch.test(workingText)) {
+      if (!this.fonts.italic) {
+        alert(
+          `Cannot Italicize layer ${this.obj.name}\nItalic font was not found.`,
+        );
+        return;
+      }
+
       const italicText = workingText.match(itMatch);
 
       italicText.forEach((t) => {
@@ -331,7 +344,7 @@ export class AiTextBox extends AiPageItem {
 
       // reload item
       this.obj = app.activeDocument.pageItems.getByName(
-        name + `_${this.id}`
+        name + `_${this.id}`,
       ) as TextFrame;
       this.obj.name = name;
       app.redraw();
