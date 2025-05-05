@@ -23,8 +23,11 @@
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
+    "@vuepress/bundler-vite": "^2.0.0-rc.22",
+    "@vuepress/bundler-webpack": "^2.0.0-rc.22",
     "@vuepress/plugin-container": "^2.0.0-rc.0",
-    "@vuepress/plugin-search": "^2.0.0-beta.68",
+    "@vuepress/plugin-search": "^2.0.0-rc.99",
+    "@vuepress/theme-default": "^2.0.0-rc.101",
     "babel-preset-extendscript": "^1.0.2",
     "just-camel-case": "^6.2.0",
     "just-clone": "^6.2.0",
@@ -38,6 +41,6 @@
     "tslib": "^2.6.2",
     "types-for-adobe": "^7.0.12",
     "typescript": "^5.3.3",
-    "vuepress": "^2.0.0-beta.68"
+    "vuepress": "^2.0.0-rc.22"
   }
 }

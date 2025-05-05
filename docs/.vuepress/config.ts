@@ -1,10 +1,18 @@
+// Vuepress Configuration
+
 import { defaultTheme } from "@vuepress/theme-default";
 import { searchPlugin } from "@vuepress/plugin-search";
+import { viteBundler } from "@vuepress/bundler-vite";
+import { defineUserConfig } from "vuepress";
+// import { webpackBundler } from "@vuepress/bundler-webpack";
 // import { containerPlugin } from '@vuepress/plugin-container'
 
-const base = process.env.NODE_ENV === "production" ? "/creative/tools/spreadsheet-ai/" : "/";
+const base =
+  process.env.NODE_ENV === "production"
+    ? "/creative/tools/spreadsheet-ai/"
+    : "/";
 
-module.exports = {
+export default defineUserConfig({
   title: "Spreadsheet Ai (the docs)",
   // description: "For templating projects like telling brooms to fill buckets",
   base,
@@ -14,7 +22,11 @@ module.exports = {
     navbar: [
       { text: "Home", link: "/" },
       { text: "Docs", link: "/docs/" },
-      { text: "Releases", link: "https://github.com/Spectrio-Creative/SpreadsheetAi/releases" },
+      {
+        text: "Releases",
+        link: "https://github.com/Spectrio-Creative/SpreadsheetAi/releases",
+      },
+      // lastUpdated
     ],
     sidebarDepth: 1,
     sidebar: {
@@ -23,17 +35,22 @@ module.exports = {
         {
           text: "Docs", // required
           // link: "/docs/", // optional
-          children: ["/docs/README.md", "/docs/text/README.md", "/docs/images/README.md", "/docs/groups/README.md"],
+          children: [
+            "/docs/README.md",
+            "/docs/text/README.md",
+            "/docs/images/README.md",
+            "/docs/groups/README.md",
+          ],
         },
         {
           text: "Downloads",
           link: "https://github.com/Spectrio-Creative/SpreadsheetAi/releases",
-        }
+        },
       ],
     },
   }),
   plugins: [
-    '@vuepress/last-updated',
+    // "@vuepress/last-updated",
     searchPlugin({
       // options
     }),
@@ -47,4 +64,12 @@ module.exports = {
     //   // render: false,
     // }),
   ],
-};
+  bundler: viteBundler({
+    viteOptions: {},
+    vuePluginOptions: {},
+  }),
+  // bundler: webpackBundler({
+  //   postcss: {},
+  //   vue: {},
+  // }),
+});
