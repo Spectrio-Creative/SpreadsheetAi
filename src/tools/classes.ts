@@ -133,6 +133,14 @@ export const parseOptions = (layerName: string) => {
   return options;
 };
 
+export const parseName = (layerName: string): string => {
+  if (layer_options.test(layerName)) {
+    return layerName.replace(layer_options, '')
+  }
+
+  return layerName
+}
+
 export type ItemClassType = "AiPageItem" | "AiGroupItem" | "AiImage" | "AiColorShape" | "AiTextBox";
 
 export const getOrMakeItemClass = (item: PageItem, type: ItemClassType | "infer" = 'infer'): AiPageItem => {

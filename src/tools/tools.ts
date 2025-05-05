@@ -1,4 +1,8 @@
-export type PriceType = "price (special)" | "price (getxfree)" | "price (xfor$)" | "price ($each)";
+export type PriceType =
+  | "price (special)"
+  | "price (getxfree)"
+  | "price (xfor$)"
+  | "price ($each)";
 
 export function priceCheck(priceString: string) {
   let priceType: PriceType = "price (special)";
@@ -18,17 +22,17 @@ export function priceCheck(priceString: string) {
 export function stringToObj(str: string) {
   // Wrap keys without quote with valid double quote
   let jsonStr = str.replace(/([\$\w]+)\s*:/g, function (match, key) {
-    return "\"" + key + "\":";
+    return '"' + key + '":';
   });
 
   jsonStr = jsonStr.replace(
     /:\s*?(?:'(.*?)'|([0-9]+\.?[0-9]*)|(true|false)|([\w]+[ \w]*))/g,
     (m, singleQuoted, num, bool, unQuoted) => {
       if (num || bool) return m;
-      if (unQuoted) return ": \"" + unQuoted.trim() + "\"";
-      if (singleQuoted) return ": \"" + singleQuoted.trim() + "\"";
+      if (unQuoted) return ': "' + unQuoted.trim() + '"';
+      if (singleQuoted) return ': "' + singleQuoted.trim() + '"';
       return m;
-    }
+    },
   );
 
   return JSON.parse(jsonStr);
@@ -38,21 +42,27 @@ export function oppositeDimension(dim: DimensionType) {
   return dim === "width" ? "height" : "width";
 }
 
-
-export type PaddingObject = { top: number, right: number, bottom: number, left: number };
+export type PaddingObject = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
 export type PaddingInput = number | number[] | PaddingObject;
 
-export function normalizePadding(padding: PaddingInput): [number, number, number, number] {
+export function normalizePadding(
+  padding: PaddingInput,
+): [number, number, number, number] {
   if (typeof padding === "number") return [padding, padding, padding, padding];
   if (padding === undefined) return [0, 0, 0, 0];
 
   let normalizedPadding = [];
-  
+
   if (Array.isArray(padding)) {
     normalizedPadding = [...padding];
     while (normalizedPadding.length < 4) {
       const length = normalizedPadding.length;
-      switch(length) {
+      switch (length) {
         case 1:
         case 2:
           normalizedPadding.push(normalizedPadding[0]);
@@ -65,8 +75,13 @@ export function normalizePadding(padding: PaddingInput): [number, number, number
           break;
       }
     }
-  
-    normalizedPadding = normalizedPadding.slice(0, 4) as [number, number, number, number];
+
+    normalizedPadding = normalizedPadding.slice(0, 4) as [
+      number,
+      number,
+      number,
+      number,
+    ];
   }
 
   const top = (padding as PaddingObject).top || normalizedPadding[0] || 0;
@@ -75,4 +90,18 @@ export function normalizePadding(padding: PaddingInput): [number, number, number
   const right = (padding as PaddingObject).right || normalizedPadding[1] || 0;
 
   return [top, right, bottom, left];
+}
+
+export function safeKey<T, K extends keyof T>(
+  object: T,
+  key: K,
+): [T[K] | null, unknown] {
+  try {
+    // We need to cast the key back to string for indexing,
+    // but TypeScript knows the return type based on T[K].
+    const result = object[key];
+    return [result, null];
+  } catch (e: unknown) {
+    return [null, e];
+  }
 }
