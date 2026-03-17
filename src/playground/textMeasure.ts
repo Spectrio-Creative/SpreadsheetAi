@@ -7,16 +7,12 @@ export interface Rectangle {
   height: number;
 }
 
-export function makeRectangle(
-  layer: Layer,
-  dimensions: Rectangle,
-  color: string
-) {
+export function makeRectangle(layer: Layer, dimensions: Rectangle, color: string) {
   const rect = layer.pathItems.rectangle(
     dimensions.y,
     dimensions.x,
     dimensions.width,
-    dimensions.height
+    dimensions.height,
   );
   rect.filled = true;
   const fillColor = new RGBColor();
@@ -46,7 +42,7 @@ export function textMeasure() {
             width: textFrame.width,
             height: leading * lines,
           },
-          "#00eeff"
+          "#00eeff",
         );
         makeRectangle(
           layer,
@@ -56,7 +52,7 @@ export function textMeasure() {
             width: textFrame.width,
             height: textFrame.height,
           },
-          "#ff0000"
+          "#ff0000",
         );
       }
     });

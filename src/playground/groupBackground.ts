@@ -1,14 +1,13 @@
 // import { AiGroupItem } from "../classes/AiGroupItem";
-import { AiGroupItem } from '../classes/AiGroupItem';
+import { AiGroupItem } from "../classes/AiGroupItem";
 import { AiImage } from "../classes/AiImage";
-import { assignDocument } from '../globals/document';
-import { getOrMakeItemClass } from '../tools/classes';
+import { assignDocument } from "../globals/document";
+import { getOrMakeItemClass } from "../tools/classes";
 import { playgroundCounter } from "./global";
 import { makeRectangle } from "./textMeasure";
 
-const link = "/Users/innocentsmith/Creative Cloud Files/Script Testing/Documentation/Demo Project 2/Links/stars.png";
-
-
+const link =
+  "/Users/innocentsmith/Creative Cloud Files/Script Testing/Documentation/Demo Project 2/Links/stars.png";
 
 function makeItems(layer: Layer | GroupItem): void {
   layer.pageItems.forEach((item) => {
@@ -28,7 +27,7 @@ function recursiveLoop(layer: Layer | GroupItem): AiGroupItem | null {
   for (let i = 0; i < layer.groupItems.length; i++) {
     const group = layer.groupItems[i];
 
-    if (group.name.startsWith('Image Group')) {
+    if (group.name.startsWith("Image Group")) {
       const groupItem = getOrMakeItemClass(group, "AiGroupItem") as AiGroupItem;
       return groupItem;
     }
@@ -60,7 +59,7 @@ export function groupBackground() {
         width: bounds[2] - bounds[0],
         height: bounds[1] - bounds[3],
       },
-      "#ff00ff"
+      "#ff00ff",
     );
 
     makeRectangle(
@@ -71,7 +70,7 @@ export function groupBackground() {
         width: group.width(),
         height: group.height(),
       },
-      "#0000ff"
+      "#0000ff",
     );
 
     makeRectangle(
@@ -82,7 +81,7 @@ export function groupBackground() {
         width: group.width(true),
         height: group.height(true),
       },
-      "#00eeff"
+      "#00eeff",
     );
   });
 

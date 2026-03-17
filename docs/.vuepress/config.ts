@@ -7,10 +7,7 @@ import { defineUserConfig } from "vuepress";
 // import { webpackBundler } from "@vuepress/bundler-webpack";
 // import { containerPlugin } from '@vuepress/plugin-container'
 
-const base =
-  process.env.NODE_ENV === "production"
-    ? "/creative/tools/spreadsheet-ai/"
-    : "/";
+const base = process.env.NODE_ENV === "production" ? "/creative/tools/spreadsheet-ai/" : "/";
 
 export default defineUserConfig({
   title: "Spreadsheet Ai (the docs)",

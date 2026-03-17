@@ -1,4 +1,4 @@
-import { AiPageItem } from '../classes/AiPageItem';
+import { AiPageItem } from "../classes/AiPageItem";
 import { SheetInfo } from "../classes/SheetInfo";
 import camelCase from "just-camel-case";
 
@@ -13,7 +13,7 @@ export const getLayerSheetCC = () => {
   return layer_sheet_cc;
 };
 
-export const setLayerSheet = (sheet: { [key: string]: string } ) => {
+export const setLayerSheet = (sheet: { [key: string]: string }) => {
   layer_sheet = sheet;
   layer_sheet_cc = {};
   for (const key in layer_sheet) {

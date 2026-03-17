@@ -1,8 +1,4 @@
-export type PriceType =
-  | "price (special)"
-  | "price (getxfree)"
-  | "price (xfor$)"
-  | "price ($each)";
+export type PriceType = "price (special)" | "price (getxfree)" | "price (xfor$)" | "price ($each)";
 
 export function priceCheck(priceString: string) {
   let priceType: PriceType = "price (special)";
@@ -50,9 +46,7 @@ export type PaddingObject = {
 };
 export type PaddingInput = number | number[] | PaddingObject;
 
-export function normalizePadding(
-  padding: PaddingInput,
-): [number, number, number, number] {
+export function normalizePadding(padding: PaddingInput): [number, number, number, number] {
   if (typeof padding === "number") return [padding, padding, padding, padding];
   if (padding === undefined) return [0, 0, 0, 0];
 
@@ -76,12 +70,7 @@ export function normalizePadding(
       }
     }
 
-    normalizedPadding = normalizedPadding.slice(0, 4) as [
-      number,
-      number,
-      number,
-      number,
-    ];
+    normalizedPadding = normalizedPadding.slice(0, 4) as [number, number, number, number];
   }
 
   const top = (padding as PaddingObject).top || normalizedPadding[0] || 0;
@@ -92,10 +81,7 @@ export function normalizePadding(
   return [top, right, bottom, left];
 }
 
-export function safeKey<T, K extends keyof T>(
-  object: T,
-  key: K,
-): [T[K] | null, unknown] {
+export function safeKey<T, K extends keyof T>(object: T, key: K): [T[K] | null, unknown] {
   try {
     // We need to cast the key back to string for indexing,
     // but TypeScript knows the return type based on T[K].

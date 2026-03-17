@@ -1,6 +1,7 @@
 ---
 title: Groups
 ---
+
 ## Introduction
 
 Like with [text](../text/) and [images](../images/), group options can be added to a layer by adding a [JSON](https://www.json.org/json-en.html)-like object to the layer name. For example, a group with an alignment option called 'Content' could be named something like `Content { align: top center }`.
@@ -36,6 +37,6 @@ Backgrounds respect the distances from the edges of the group itself for cases w
 
 In the example below we have a layer in the group titled `stars { groupBackground: true, size: cover }`.
 
-![](../../images/group-background-before.jpg) |  ![](../../images/group-background-after.jpg)
-:-------------------------:|:-------------------------:
-Template with group containing a background shape with some padding.  | Resized group after running the script with background image resized.
+|            ![](../../images/group-background-before.jpg)             |             ![](../../images/group-background-after.jpg)              |
+| :------------------------------------------------------------------: | :-------------------------------------------------------------------: |
+| Template with group containing a background shape with some padding. | Resized group after running the script with background image resized. |

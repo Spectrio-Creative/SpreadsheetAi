@@ -2,11 +2,11 @@ import { findTemplate, recursiveLayerLoop } from "../tools/templates";
 import { fillFromTemplate } from "./insertTemplateValues";
 import { document } from "../globals/document";
 import { layer_sheet_cc } from "../globals/globals";
-import { duplicateLayer } from '../tools/duplicate';
+import { duplicateLayer } from "../tools/duplicate";
 
 export function createLayer(num: number) {
   // TODO: Add logic for variable template ref
-  const templateTitle: string = layer_sheet_cc["template"] || layer_sheet_cc["layerTemplate"]; 
+  const templateTitle: string = layer_sheet_cc["template"] || layer_sheet_cc["layerTemplate"];
 
   // If no template column, alert and exit
   if (templateTitle === undefined) {

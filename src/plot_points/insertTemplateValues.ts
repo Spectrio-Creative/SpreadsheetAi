@@ -3,7 +3,7 @@ import { AiTextBox } from "../classes/AiTextBox";
 import { AiPageItem } from "../classes/AiPageItem";
 import { AiGroupItem } from "../classes/AiGroupItem";
 import { layer_sheet } from "../globals/globals";
-import { getOrMakeItemClass } from '../tools/classes';
+import { getOrMakeItemClass } from "../tools/classes";
 
 export function fillLayer(item: PageItem) {
   const newItem = getOrMakeItemClass(item);
@@ -13,7 +13,7 @@ export function fillLayer(item: PageItem) {
     newItem.italicize();
     if (moustaches) newItem.resizeBox();
   }
-  
+
   return newItem;
 }
 

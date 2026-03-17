@@ -1,5 +1,5 @@
 import { AiGroupItem } from "../classes/AiGroupItem";
-import { playgroundCounter } from './global';
+import { playgroundCounter } from "./global";
 import { makeRectangle } from "./textMeasure";
 
 export function groupMeasure() {
@@ -7,7 +7,7 @@ export function groupMeasure() {
 
   layers.forEach((layer) => {
     layer.groupItems.forEach((group) => {
-      if (group.name.startsWith('Image Group')) {
+      if (group.name.startsWith("Image Group")) {
         const groupItem = new AiGroupItem(group);
 
         const bounds = group.geometricBounds;
@@ -20,7 +20,7 @@ export function groupMeasure() {
             width: groupItem.width(),
             height: groupItem.height(),
           },
-          "#0000ff"
+          "#0000ff",
         );
 
         makeRectangle(
@@ -31,7 +31,7 @@ export function groupMeasure() {
             width: bounds[2] - bounds[0],
             height: bounds[1] - bounds[3],
           },
-          "#00eeff"
+          "#00eeff",
         );
 
         makeRectangle(
@@ -42,7 +42,7 @@ export function groupMeasure() {
             width: groupItem.width(true),
             height: groupItem.height(true),
           },
-          "#00ff00"
+          "#00ff00",
         );
       }
     });

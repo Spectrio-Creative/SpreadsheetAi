@@ -14,7 +14,7 @@ import { fromCSV } from "./tools/csv";
 import { setUpStringMethods } from "./tools/extensions/string";
 import { document } from "./globals/document";
 import { templates } from "./globals/globals";
-import { exit, openCSV } from './tools/fs';
+import { exit, openCSV } from "./tools/fs";
 
 const main = () => {
   alert(`SpreadsheetAi (v${scriptVersion})`);

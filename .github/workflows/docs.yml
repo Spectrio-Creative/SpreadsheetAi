@@ -2,13 +2,13 @@
 
 name: Build Docs
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'docs/**' 
+      - "docs/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -20,25 +20,24 @@ jobs:
     name: Build & Deploy Docs
     runs-on: ubuntu-latest
     steps:
-    - name: Get latest code
-      uses: actions/checkout@v4.1.0
+      - name: Get latest code
+        uses: actions/checkout@v4.1.0
 
-    - name: Use Node.js 18
-      uses: actions/setup-node@v3.8.1
-      with:
-        node-version: '18'
-      
-    - name: Build Project
-      run: |
-        yarn
-        yarn docs:build
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3.8.1
+        with:
+          node-version: "18"
 
-    - name: Sync Files
-      uses: verbindingsfout/sftp-mirror@v1.6
-      with:
-        server: ${{ secrets.sftp_server }}
-        user: ${{ secrets.sftp_username }}
-        password: ${{ secrets.sftp_password }}
-        local: "./docs/.vuepress/dist/"
-        remote: "/var/www/html/creative/tools/spreadsheet-ai/"
+      - name: Build Project
+        run: |
+          yarn
+          yarn docs:build
 
+      - name: Sync Files
+        uses: verbindingsfout/sftp-mirror@v1.6
+        with:
+          server: ${{ secrets.sftp_server }}
+          user: ${{ secrets.sftp_username }}
+          password: ${{ secrets.sftp_password }}
+          local: "./docs/.vuepress/dist/"
+          remote: "/var/www/html/creative/tools/spreadsheet-ai/"

@@ -1,6 +1,7 @@
 ---
 title: Images
 ---
+
 ## Introduction
 
 Like with [text](../text/) and [groups](../groups/), image options can be added to a layer by adding a [JSON](https://www.json.org/json-en.html)-like object to the layer name. For example, a layer with a size and alignment option called 'Background' could be named something like `Background { size: cover, align: top center }`.

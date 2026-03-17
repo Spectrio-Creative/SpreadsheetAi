@@ -1,7 +1,7 @@
 import { document, templatePath } from "../globals/document";
 import { addItemClassToGlobal, calculatePosition, parseAlignment } from "../tools/classes";
 import { oppositeDimension } from "../tools/tools";
-import { PositionOptionLimited } from './AiGroupItem';
+import { PositionOptionLimited } from "./AiGroupItem";
 import { AiPageItem, AiPageItemOptions } from "./AiPageItem";
 
 export interface AiImageOptions extends AiPageItemOptions {
@@ -73,16 +73,13 @@ export class AiImage extends AiPageItem {
 
       this.setImageSize(this.options.size);
       this.alignImage(
-        this.options.align ||
-          (this.options.location as Alignment | DoubleAlignment) ||
-          "center"
+        this.options.align || (this.options.location as Alignment | DoubleAlignment) || "center",
       );
 
       const clip = this.options.clipped ?? this.options.size !== "contain";
 
       this.toggleClip(clip);
     }
-    
   }
 
   alreadSetUp(item: PageItem) {
@@ -139,11 +136,7 @@ export class AiImage extends AiPageItem {
     return true;
   }
 
-  tryToAttachImage(
-    url: string,
-    callback?: () => unknown,
-    onFail?: (e: unknown) => unknown
-  ) {
+  tryToAttachImage(url: string, callback?: () => unknown, onFail?: (e: unknown) => unknown) {
     const file = new File(url);
     if (!file.exists) return;
     try {
@@ -163,8 +156,7 @@ export class AiImage extends AiPageItem {
       return;
     }
 
-    let keyDimension: DimensionType =
-      this.original.ratio > this.model.ratio ? "width" : "height";
+    let keyDimension: DimensionType = this.original.ratio > this.model.ratio ? "width" : "height";
 
     if (option === "cover") keyDimension = oppositeDimension(keyDimension);
 
@@ -196,7 +188,6 @@ export class AiImage extends AiPageItem {
       this.modelItem = undefined;
       return;
     }
-
   }
 
   offset(axis?: "x" | "y") {
@@ -232,7 +223,7 @@ export class AiImage extends AiPageItem {
 
   getPosition(position?: PositionOptionLimited) {
     if (!position) return [this.getPosition("top"), this.getPosition("left")];
-    
+
     if (this.clipped) {
       return this.model[position];
     }

@@ -2,7 +2,7 @@
 title: Introduction
 ---
 
-#### 
+####
 
 The aim of the SpreadsheetAi script is to allow the creation of flexible templates which could accept a range of inputs and still have the images size correctly and the text flow naturally.
 
@@ -13,9 +13,9 @@ The aim of the SpreadsheetAi script is to allow the creation of flexible templat
 Installed like any other Illustrator script; download the script file from [GitHub](https://github.com/Spectrio-Creative/SpreadsheetAi/releases/latest), then add the unzipped .jsx script file to your Illustrator Scripts folder:
 
 Mac: `Applications/Adobe Illustrator <version>/Presets/<lang_REGION>/Scripts`  
-Windows: `C:\Program Files\Adobe\Adobe Illustrator <version>\Presets\<lang_REGION>\Scripts` 
+Windows: `C:\Program Files\Adobe\Adobe Illustrator <version>\Presets\<lang_REGION>\Scripts`
 
-Once the script is installed, restart Illustrator (if it’s open) and the script will now be available in the menu  as `File > Scripts > SpreadsheetAi`
+Once the script is installed, restart Illustrator (if it’s open) and the script will now be available in the menu as `File > Scripts > SpreadsheetAi`
 
 ## Project Folder Setup
 
@@ -29,9 +29,9 @@ Images can be kept either in the root of the project folder or in a ‘Links’ 
 In future, I'm considering having the script create a new AI file by default and place it in the same directory as the spreadsheet.
 :::
 
-![](../images/templates_folder.png) |  ![](../images/project_folder.png)
-:-------------------------:|:-------------------------:
-Demo template folder.  | Demo project folder setup.
+| ![](../images/templates_folder.png) | ![](../images/project_folder.png) |
+| :---------------------------------: | :-------------------------------: |
+|        Demo template folder.        |    Demo project folder setup.     |
 
 ## Spreadsheet Setup
 
@@ -47,6 +47,6 @@ Column data can reference data in a seperate column by referencing the header of
 Recursive references are not allowed. i.e. the “Primary Variable” value cannot reference `{{ primaryVariable }}`. Nor, for example, could “Second Variable” reference `{{ primaryVariable }}` if “Primary Variable” references `{{ secondVariable }}`, etc.
 :::
 
-![](../images/spreadsheet_setup.jpg) |  ![](../images/spreadsheet_setup_long_gloves.jpg)
-:-------------------------:|:-------------------------:
-Demo spreadsheet setup.  | Template filled from demo spreadsheet.
+| ![](../images/spreadsheet_setup.jpg) | ![](../images/spreadsheet_setup_long_gloves.jpg) |
+| :----------------------------------: | :----------------------------------------------: |
+|       Demo spreadsheet setup.        |      Template filled from demo spreadsheet.      |

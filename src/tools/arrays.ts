@@ -2,10 +2,7 @@ export function last<T>(array: Array<T>) {
   return array[array.length - 1];
 }
 
-export function loopBackwards<T>(
-  arr: Array<T>,
-  callback: (input: T) => unknown
-) {
+export function loopBackwards<T>(arr: Array<T>, callback: (input: T) => unknown) {
   for (let i = arr.length - 1; i >= 0; i--) {
     if (callback) {
       const command = callback(arr[i]);

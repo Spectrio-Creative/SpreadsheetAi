@@ -1,5 +1,5 @@
 // import { AiGroupItem } from "../classes/AiGroupItem";
-import { AiGroupItem } from '../classes/AiGroupItem';
+import { AiGroupItem } from "../classes/AiGroupItem";
 import { AiImage } from "../classes/AiImage";
 import { playgroundCounter } from "./global";
 import { makeRectangle } from "./textMeasure";
@@ -42,7 +42,7 @@ export function groupBackground() {
         width: group.width(),
         height: group.height(),
       },
-      "#0000ff"
+      "#0000ff",
     );
 
     makeRectangle(
@@ -53,7 +53,7 @@ export function groupBackground() {
         width: bounds[2] - bounds[0],
         height: bounds[1] - bounds[3],
       },
-      "#ff00ff"
+      "#ff00ff",
     );
 
     makeRectangle(
@@ -64,7 +64,7 @@ export function groupBackground() {
         width: group.width(true),
         height: group.height(true),
       },
-      "#00eeff"
+      "#00eeff",
     );
   });
 

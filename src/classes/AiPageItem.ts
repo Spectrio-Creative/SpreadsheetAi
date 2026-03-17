@@ -1,7 +1,7 @@
-import { playgroundCounter } from '../playground/global';
-import { addItemClassToGlobal, getOrMakeItemClass, parseOptions } from '../tools/classes';
-import { layer_options } from '../tools/regExTests';
-import { PaddingInput, normalizePadding, stringToObj } from '../tools/tools';
+import { playgroundCounter } from "../playground/global";
+import { addItemClassToGlobal, getOrMakeItemClass, parseOptions } from "../tools/classes";
+import { layer_options } from "../tools/regExTests";
+import { PaddingInput, normalizePadding, stringToObj } from "../tools/tools";
 // import { AiGroupItem } from './AiGroupItem';
 
 export interface AiPageItemOptions {
@@ -23,7 +23,9 @@ export class AiPageItem {
   newValue?: string;
 
   constructor(item: PageItem) {
-    playgroundCounter["AiPageItem"] = playgroundCounter["AiPageItem"] ? playgroundCounter["AiPageItem"] + 1 : 1;
+    playgroundCounter["AiPageItem"] = playgroundCounter["AiPageItem"]
+      ? playgroundCounter["AiPageItem"] + 1
+      : 1;
 
     this.obj = item;
     this.options = parseOptions(item.name);
@@ -81,7 +83,7 @@ export class AiPageItem {
 
   hide() {
     const parent = this.obj.parent as PageItem;
-    let {top, left, width: _width, height: _height} = parent;
+    let { top, left, width: _width, height: _height } = parent;
 
     this.hideSelf();
 
@@ -95,10 +97,7 @@ export class AiPageItem {
 
     this.storeSizeAndPosition();
     this.setSize(0.1, 0.1);
-    this.setPosition(
-      left,
-      top
-    );
+    this.setPosition(left, top);
   }
 
   unHideSelf() {
@@ -151,7 +150,6 @@ export class AiPageItem {
       this.original.height = this.height();
       this.original.width = this.width();
       this.original.ratio = this.original.width / this.original.height;
-
     } catch (error) {
       alert(`Error thrown while getting item dimensions.
       layer: ${this.obj.name}
@@ -181,7 +179,7 @@ export class AiPageItem {
     this.obj.top = this.stored.top;
     this.obj.left = this.stored.left;
   }
- 
+
   // parseLayerName(layerName: string): string {
   //   // const nameParts = /(.*?)(\{.*\})\s*?$/
   //   // if (nameParts.test(layerName)) {
@@ -189,7 +187,7 @@ export class AiPageItem {
   //   //   const options: Record<string, any> = stringToObj(optionStr)
   //   //   return [name, options]
   //   // }
-  
+
   //   return layerName
   // }
 }

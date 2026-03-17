@@ -50,8 +50,7 @@ export class AiTextBox extends AiPageItem {
     // Set value if value is given
     if (typeof value !== "undefined" && value !== null) {
       let sanatizedVal = `${value}`.replace(/""/g, '"');
-      if (/^(['"]).*\1$/.test(sanatizedVal))
-        sanatizedVal = sanatizedVal.slice(1, -1);
+      if (/^(['"]).*\1$/.test(sanatizedVal)) sanatizedVal = sanatizedVal.slice(1, -1);
 
       this.setText(sanatizedVal);
     }
@@ -159,9 +158,7 @@ export class AiTextBox extends AiPageItem {
 
     if (itMatch.test(workingText)) {
       if (!this.fonts.italic) {
-        alert(
-          `Cannot Italicize layer ${this.obj.name}\nItalic font was not found.`,
-        );
+        alert(`Cannot Italicize layer ${this.obj.name}\nItalic font was not found.`);
         return;
       }
 
@@ -179,16 +176,13 @@ export class AiTextBox extends AiPageItem {
         workingTextRange.contents = text.slice(1, -1);
 
         workingText =
-          workingText.substring(0, start) +
-          text.slice(1, -1) +
-          workingText.substring(end);
+          workingText.substring(0, start) + text.slice(1, -1) + workingText.substring(end);
       });
     }
   }
 
   calculateMaxHeightInPixels(): number {
-    if (!this.options || !this.options.maxHeight)
-      return Number.POSITIVE_INFINITY;
+    if (!this.options || !this.options.maxHeight) return Number.POSITIVE_INFINITY;
     const leading = this.obj.textRange.characterAttributes.leading;
     return this.options.maxHeight * leading;
   }
@@ -230,8 +224,7 @@ export class AiTextBox extends AiPageItem {
     const orHeight = this.obj.textPath.height;
     this.obj.textPath.height = 10000;
     const lineHeight = this.obj.textRange.characterAttributes.leading;
-    const isolatedLeading =
-      lineHeight - this.obj.textRange.characterAttributes.size;
+    const isolatedLeading = lineHeight - this.obj.textRange.characterAttributes.size;
     const linesN = this.obj.lines.length;
     let projectedH = lineHeight * linesN - isolatedLeading;
 
@@ -247,8 +240,7 @@ export class AiTextBox extends AiPageItem {
     // this.maxHeightInPixels: ${this.maxHeightInPixels}
     // `);
 
-    if (this.maxHeightInPixels < projectedH)
-      projectedH = this.maxHeightInPixels - isolatedLeading;
+    if (this.maxHeightInPixels < projectedH) projectedH = this.maxHeightInPixels - isolatedLeading;
 
     this.obj.textPath.height = projectedH;
     if (!cancelFitting) this.fitToBox();
@@ -260,10 +252,7 @@ export class AiTextBox extends AiPageItem {
   resizeBoxWidth() {
     const lineLength = this.longestLine().length;
 
-    while (
-      this.longestLine().length >= lineLength &&
-      this.obj.textPath.width > 10
-    ) {
+    while (this.longestLine().length >= lineLength && this.obj.textPath.width > 10) {
       this.obj.textPath.width -= 10;
     }
 
@@ -343,9 +332,7 @@ export class AiTextBox extends AiPageItem {
       app.redraw();
 
       // reload item
-      this.obj = app.activeDocument.pageItems.getByName(
-        name + `_${this.id}`,
-      ) as TextFrame;
+      this.obj = app.activeDocument.pageItems.getByName(name + `_${this.id}`) as TextFrame;
       this.obj.name = name;
       app.redraw();
 

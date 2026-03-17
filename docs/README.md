@@ -20,7 +20,7 @@ title: Home
 
 If you're only here to nab the newest version of the script, it's [just here](https://github.com/Spectrio-Creative/SpreadsheetAi/releases/latest).
 
-Otherwise, this microsite should contain information on how to set up an Illustrator project to use the Spreadsheet Ai Script as well as information that should help with troubleshooting issues you might have along the way. 
+Otherwise, this microsite should contain information on how to set up an Illustrator project to use the Spreadsheet Ai Script as well as information that should help with troubleshooting issues you might have along the way.
 
 I am actively working to improve the script as well as the documentation of the script, so if anything is missing or unclear in the documentation, please reach out to Adam Howard via Skype, RingCentral, or email [adamh@spectrio.com](mailto:adamh@spectrio.com).
 

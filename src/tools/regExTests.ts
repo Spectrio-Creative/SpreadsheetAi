@@ -4,8 +4,5 @@ export const is_color = new RegExp("^#(?:[0-9a-fA-F]{3}){1,2}$", "i");
 export const layer_options = /(\{.*\})\s*?$/i;
 
 export const key_test = (key: string) => {
-  return new RegExp(
-    "^\\s*" + key.replace(" ", "\\s{0,1}") + "\\s*(\\{.*\\})*\\s*$",
-    "i"
-  );
+  return new RegExp("^\\s*" + key.replace(" ", "\\s{0,1}") + "\\s*(\\{.*\\})*\\s*$", "i");
 };

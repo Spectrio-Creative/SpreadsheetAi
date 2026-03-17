@@ -1,7 +1,7 @@
 import { templatePath } from "../globals/document";
 // @ts-expect-error
 import sheetString from "../../actions/SpreadsheetAi.aia";
-import { cleanUp } from '../plot_points/setup';
+import { cleanUp } from "../plot_points/setup";
 
 export function loadSpreadsheetActions() {
   const actionFile = new File(templatePath + "/SpreadsheetAi_auto.aia");
@@ -25,11 +25,7 @@ export function exit(notification: string) {
 
 export const openCSV = () => {
   if (File.fs === "Windows") {
-    return File.openDialog(
-      "Open CSV file",
-      "Text: *.csv,All files: *.*",
-      false
-    );
+    return File.openDialog("Open CSV file", "Text: *.csv,All files: *.*", false);
   }
 
   return File.openDialog(
@@ -40,6 +36,6 @@ export const openCSV = () => {
       if (file.name.match(/\.csv$/i)) return true;
       if (file.type == "CSV ") return true;
     },
-    false
+    false,
   );
 };

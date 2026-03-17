@@ -31,7 +31,7 @@ export function duplicateDocument() {
 
   // Delete all artboards marked for deletion
   newDocuemnt.artboards.forEach((artboard) => {
-    if (artboard.name.startsWith('DELETE')) {
+    if (artboard.name.startsWith("DELETE")) {
       artboard.remove();
     }
   });

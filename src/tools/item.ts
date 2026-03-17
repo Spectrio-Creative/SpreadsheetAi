@@ -1,9 +1,6 @@
 import { parseName, parseOptions } from "./classes";
 
-export const hasMutableChildren = (
-  item: PageItem | Layer,
-  keyList: string[],
-) => {
+export const hasMutableChildren = (item: PageItem | Layer, keyList: string[]) => {
   function isOrHasMutable(item: PageItem | Layer, top = false) {
     if (item.typename === "Layer") {
       for (const inner of (item as Layer).layers) {

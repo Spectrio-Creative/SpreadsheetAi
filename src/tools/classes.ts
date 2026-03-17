@@ -1,12 +1,12 @@
-import camelCase from 'just-camel-case';
-import { AiGroupItem } from '../classes/AiGroupItem';
-import { AiPageItem } from '../classes/AiPageItem';
-import { AiTextBox } from '../classes/AiTextBox';
-import { aiObjByUUID, layer_sheet_cc } from '../globals/globals';
+import camelCase from "just-camel-case";
+import { AiGroupItem } from "../classes/AiGroupItem";
+import { AiPageItem } from "../classes/AiPageItem";
+import { AiTextBox } from "../classes/AiTextBox";
+import { aiObjByUUID, layer_sheet_cc } from "../globals/globals";
 import { is_color, is_image, layer_options } from "./regExTests";
 import { stringToObj } from "./tools";
-import { AiImage } from '../classes/AiImage';
-import { AiColorShape } from '../classes/AiColorShape';
+import { AiImage } from "../classes/AiImage";
+import { AiColorShape } from "../classes/AiColorShape";
 
 export const locationsAsSingleString = /^([\w.]+) ([\w.]+)/;
 
@@ -14,7 +14,10 @@ export const isStringLocation = (location: string) => {
   return locationsAsSingleString.test(location);
 };
 
-export const parseAlignment = (x: Alignment | DoubleAlignment, y?: Alignment): [HorizontalAlignment, VerticalAlignment] => {
+export const parseAlignment = (
+  x: Alignment | DoubleAlignment,
+  y?: Alignment,
+): [HorizontalAlignment, VerticalAlignment] => {
   // If x is DoubleAlignment, separate into x and y
   if (typeof x === "string" && / /.test(x)) {
     let [xAlign, yAlign] = x.split(" ");
@@ -69,7 +72,7 @@ export const parseLocation = (location: string) => {
 };
 
 export const getGroupAlignment = (
-  group: GroupItem
+  group: GroupItem,
 ): { x: HorizontalAlignment; y: VerticalAlignment } => {
   if (group.pageItems.length > 2) return { x: "center", y: "center" };
   let textAlignment = "center";
@@ -80,9 +83,7 @@ export const getGroupAlignment = (
       : {};
     $.write(options);
     if (item.typename === "TextFrame")
-      textAlignment = (
-        item as TextFrame
-      ).textRange.paragraphAttributes.justification
+      textAlignment = (item as TextFrame).textRange.paragraphAttributes.justification
         .toString()
         .toLowerCase()
         .replace("justification.", "")
@@ -135,15 +136,18 @@ export const parseOptions = (layerName: string) => {
 
 export const parseName = (layerName: string): string => {
   if (layer_options.test(layerName)) {
-    return layerName.replace(layer_options, '')
+    return layerName.replace(layer_options, "");
   }
 
-  return layerName
-}
+  return layerName;
+};
 
 export type ItemClassType = "AiPageItem" | "AiGroupItem" | "AiImage" | "AiColorShape" | "AiTextBox";
 
-export const getOrMakeItemClass = (item: PageItem, type: ItemClassType | "infer" = 'infer'): AiPageItem => {
+export const getOrMakeItemClass = (
+  item: PageItem,
+  type: ItemClassType | "infer" = "infer",
+): AiPageItem => {
   const uuid = item.uuid;
   if (uuid && aiObjByUUID[uuid]) return aiObjByUUID[uuid];
 

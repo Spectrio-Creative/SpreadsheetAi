@@ -59,8 +59,7 @@ export class AiGroupItem extends AiPageItem {
     });
 
     // Filter out clipped items if clipped is true
-    if (this.obj.clipped)
-      pageItems = pageItems.filter((item) => !!(item as PathItem)?.clipping);
+    if (this.obj.clipped) pageItems = pageItems.filter((item) => !!(item as PathItem)?.clipping);
 
     // Convert textFrameItems to AiTextBoxes
     // pageItems = pageItems.map((item) => {
@@ -96,10 +95,7 @@ export class AiGroupItem extends AiPageItem {
       const group = getOrMakeItemClass(groupItem, "AiGroupItem") as AiGroupItem;
       // Check if group is background
       if (ignoreBackground && group.uuid === this.background.uuid) return;
-      let groupPosition = group.getPosition(
-        position,
-        ignoreBackground,
-      ) as number;
+      let groupPosition = group.getPosition(position, ignoreBackground) as number;
       if (position === "top") groupPosition = -groupPosition;
       if (groupPosition < min) min = groupPosition;
     });
@@ -129,8 +125,7 @@ export class AiGroupItem extends AiPageItem {
       ignoreBackground = false;
     }
 
-    const position: PositionOptionLimited =
-      dimension === "width" ? "left" : "top";
+    const position: PositionOptionLimited = dimension === "width" ? "left" : "top";
 
     let max = 0;
     let coordinates: Coordinates[] = [];
@@ -173,18 +168,13 @@ export class AiGroupItem extends AiPageItem {
         return true;
       }
 
-      if (
-        lastAccepted[position] + lastAccepted[dimension] >
-        coor[position] + coor[dimension]
-      )
+      if (lastAccepted[position] + lastAccepted[dimension] > coor[position] + coor[dimension])
         return false;
 
       return true;
     });
 
-    const minPosition = coordinates[0]
-      ? coordinates[0][position]
-      : Number.POSITIVE_INFINITY;
+    const minPosition = coordinates[0] ? coordinates[0][position] : Number.POSITIVE_INFINITY;
 
     const groupsDimension =
       coordinates.length > 0
@@ -247,9 +237,7 @@ export class AiGroupItem extends AiPageItem {
     [x, y] = parseAlignment(x, y);
 
     const [width, height] = this.getDimension() as [number, number];
-    const [newX, newY] = calculatePosition(this.original, { height, width })[
-      `${x} ${y}`
-    ]();
+    const [newX, newY] = calculatePosition(this.original, { height, width })[`${x} ${y}`]();
 
     this.setTop(newY);
     this.setLeft(newX);
@@ -322,10 +310,7 @@ export class AiGroupItem extends AiPageItem {
     };
     const padding = this.background.padding;
 
-    this.background.setPosition(
-      actual.left - padding[3],
-      actual.top + padding[0],
-    );
+    this.background.setPosition(actual.left - padding[3], actual.top + padding[0]);
     this.background.setSize(
       actual.width + (padding[1] + padding[3]),
       actual.height + (padding[0] + padding[2]),

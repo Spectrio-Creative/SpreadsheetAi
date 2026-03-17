@@ -44,7 +44,7 @@ export function groupBackground() {
         width: aiImage.width(),
         height: aiImage.height(),
       },
-      "#0000ff"
+      "#0000ff",
     );
 
     makeRectangle(
@@ -55,7 +55,7 @@ export function groupBackground() {
         width: controlBounds[2] - controlBounds[0],
         height: controlBounds[1] - controlBounds[3],
       },
-      "#ff00ff"
+      "#ff00ff",
     );
 
     makeRectangle(
@@ -66,7 +66,7 @@ export function groupBackground() {
         width: bounds[2] - bounds[0],
         height: bounds[1] - bounds[3],
       },
-      "#00eeff"
+      "#00eeff",
     );
     makeRectangle(
       layer,
@@ -76,7 +76,7 @@ export function groupBackground() {
         width: group.width,
         height: group.height,
       },
-      "#ff0000"
+      "#ff0000",
     );
     makeRectangle(
       layer,
@@ -86,7 +86,7 @@ export function groupBackground() {
         width: visibleBounds[2] - visibleBounds[0],
         height: visibleBounds[1] - visibleBounds[3],
       },
-      "#00ff00"
+      "#00ff00",
     );
   });
 

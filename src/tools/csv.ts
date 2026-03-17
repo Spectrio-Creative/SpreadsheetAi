@@ -8,8 +8,8 @@ export function splitIntoLines(text: string) {
       out.push(line);
       line = "";
       continue;
-    } 
-    
+    }
+
     if (character === '"') {
       if (inQuote) inQuote = false;
       else inQuote = true;
