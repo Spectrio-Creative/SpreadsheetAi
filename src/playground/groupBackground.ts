@@ -28,7 +28,7 @@ function recursiveLoop(layer: Layer | GroupItem): AiGroupItem | null {
   for (let i = 0; i < layer.groupItems.length; i++) {
     const group = layer.groupItems[i];
 
-    if (/^Image Group/.test(group.name)) {
+    if (group.name.startsWith('Image Group')) {
       const groupItem = getOrMakeItemClass(group, "AiGroupItem") as AiGroupItem;
       return groupItem;
     }

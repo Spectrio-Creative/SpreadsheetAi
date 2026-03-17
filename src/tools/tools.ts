@@ -21,7 +21,7 @@ export function priceCheck(priceString: string) {
 
 export function stringToObj(str: string) {
   // Wrap keys without quote with valid double quote
-  let jsonStr = str.replace(/([\$\w]+)\s*:/g, function (match, key) {
+  let jsonStr = str.replace(/([$\w]+)\s*:/g, function (match, key) {
     return '"' + key + '":';
   });
 

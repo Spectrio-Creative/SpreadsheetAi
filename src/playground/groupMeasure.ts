@@ -7,7 +7,7 @@ export function groupMeasure() {
 
   layers.forEach((layer) => {
     layer.groupItems.forEach((group) => {
-      if (/^Image Group/.test(group.name)) {
+      if (group.name.startsWith('Image Group')) {
         const groupItem = new AiGroupItem(group);
 
         const bounds = group.geometricBounds;
