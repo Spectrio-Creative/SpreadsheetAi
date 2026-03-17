@@ -1,4 +1,4 @@
-import { nodeResolve } from "@rollup/plugin-node-resolve";
+// import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { getBabelOutputPlugin } from "@rollup/plugin-babel";
 // import eslint from "@rollup/plugin-eslint";
 import typescript from "@rollup/plugin-typescript";
@@ -29,7 +29,7 @@ export default {
   plugins: [
     typescript(),
     // eslint({throwOnError: true}),
-    nodeResolve(),
+    // nodeResolve(),
     getBabelOutputPlugin({ presets: ["extendscript"] }),
     stripComments(),
   ],
