@@ -1,25 +1,36 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import json from "@rollup/plugin-json";
 import { getBabelOutputPlugin } from "@rollup/plugin-babel";
-import { string } from "rollup-plugin-string";
 // import eslint from "@rollup/plugin-eslint";
 import typescript from "@rollup/plugin-typescript";
-import stripComments from "./plugins/strip";
+import strip from "strip-comments";
+
+function stripComments() {
+  return {
+    name: "remove-comments",
+    transform(code) {
+      return {
+        code: strip(code),
+        map: null,
+      };
+    },
+  };
+}
 
 export default {
   input: process.env.ENTRY || "src/main.ts",
+  moduleTypes: {
+    ".aia": "text",
+  },
   output: {
     file: process.env.OUTPUT || "build/SpreadsheetAi.jsx",
     format: "esm",
-    sourcemap: false
+    sourcemap: false,
   },
   plugins: [
     typescript(),
     // eslint({throwOnError: true}),
     nodeResolve(),
-    json(),
     getBabelOutputPlugin({ presets: ["extendscript"] }),
-    string({ include: "actions/*" }),
-    stripComments()
+    stripComments(),
   ],
 };
